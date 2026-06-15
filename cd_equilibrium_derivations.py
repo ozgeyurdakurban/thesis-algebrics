@@ -192,6 +192,37 @@ print("existence denom D is T-free (same condition both models)? ->",
       sp.simplify(sp.diff(D, T)) == 0)
 
 # ------------------------------------------------------------------------------
+# Worked numerical example (n = 2, asymmetric): the altruism ordering
+# ------------------------------------------------------------------------------
+# Parameters: n=2, beta=1.2, e=15, A_i = 1 - B_i.
+# Agent 1 is MORE altruistic (B1=0.2) than agent 2 (B2=0.1).
+# Uses the general asymmetric closed form  c_i* = (e/mu) phi_i ,
+#   phi_i = kappa_i/(1+kappa_i),  kappa_i = B_i/(A_i theta),  mu = 1-(beta/n) sum_j phi_j.
+banner("Worked example: altruism ordering (n=2)")
+ex_n, ex_beta, ex_e = 2, sp.Rational(6, 5), 15          # beta = 1.2
+B1_v, B2_v = sp.Rational(1, 5), sp.Rational(1, 10)      # 0.2 and 0.1
+theta_v = 1 - ex_beta / ex_n                            # = 0.4
+
+def _kappa(Bv):                                         # A_i = 1 - B_i
+    return Bv / ((1 - Bv) * theta_v)
+
+def _phi(Bv):
+    k = _kappa(Bv)
+    return k / (1 + k)
+
+phi1_v, phi2_v = _phi(B1_v), _phi(B2_v)
+mu_v = 1 - (ex_beta / ex_n) * (phi1_v + phi2_v)
+c1_v = (ex_e / mu_v) * phi1_v
+c2_v = (ex_e / mu_v) * phi2_v
+
+for nm, v in [("theta", theta_v), ("kappa_1", _kappa(B1_v)), ("kappa_2", _kappa(B2_v)),
+              ("phi_1", phi1_v), ("phi_2", phi2_v), ("mu", mu_v),
+              ("c_1*", c1_v), ("c_2*", c2_v)]:
+    print(f"  {nm:8s} = {float(v):.4f}")
+print(f"  ordering: c_1* > c_2*  ({float(c1_v):.4f} > {float(c2_v):.4f})  since B_1 > B_2")
+print(f"  interior: 0 < c_i* < e={ex_e} ? -> {bool(0 < c2_v and c1_v < ex_e)}")
+
+# ------------------------------------------------------------------------------
 # Automated consistency checks
 # ------------------------------------------------------------------------------
 banner("Automated checks")
@@ -213,6 +244,8 @@ checks = {
     "WG symmetric c*":        is_zero(c_wg.subs(A, 1 - B) - c_wg_claim.subs(A, 1 - B)),
     "IB - WG gap":            is_zero(gap - A * (n - beta) * T / D),
     "WG crowd-out sign":      is_zero(dWG_dT + A * (n - beta) / D),
+    "example ordering c1>c2": bool(c1_v > c2_v),
+    "example interiority":    bool(0 < c2_v and c1_v < ex_e),
 }
 for name, ok in checks.items():
     print(f"  [{'PASS' if ok else 'FAIL'}]  {name}")
