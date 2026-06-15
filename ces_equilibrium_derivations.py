@@ -252,6 +252,52 @@ print("asymmetric -> symmetric (k1=k2=k) at n=2? ->", is_zero(c1_to_sym - c_sym_
 
 
 # ------------------------------------------------------------------------------
+# Asymmetric Nash equilibrium:  general-N closed form  (verified at N = 3)
+# ------------------------------------------------------------------------------
+# Aggregate-form best response (use theta + beta/n = 1):
+#     c_i (lambda + k_i) = k_i ( e + (beta/n) C ),   C = sum_k c_k
+#  => c_i = r_i ( e + (beta/n) C ),   with  r_i = k_i / (lambda + k_i).
+# Summing over i gives the general-N closed form:
+#     C*   = e S / mu ,   S = sum_j r_j ,   mu = 1 - (beta/n) S ,
+#     c_i* = (e/mu) r_i = (e/mu) * k_i / (lambda + k_i).
+banner("Asymmetric Nash equilibrium  (general N, verified at N = 3)")
+
+k3, c3 = sp.symbols('k3 c3', positive=True)
+lam3   = 1 + 2 * beta / 3          # lambda at n = 3
+th3    = 1 - beta / 3
+
+def BR_n3(ki, cj, ck):             # C_{-i} = cj + ck
+    return ki * (e + (beta / 3) * (cj + ck)) / (lam3 + ki * th3)
+
+sol3 = sp.solve(
+    [sp.Eq(c1, BR_n3(k1, c2, c3)),
+     sp.Eq(c2, BR_n3(k2, c1, c3)),
+     sp.Eq(c3, BR_n3(k3, c1, c2))],
+    [c1, c2, c3], dict=True)[0]
+
+# General closed form, specialized to n = 3
+def r(ki):
+    return ki / (lam3 + ki)
+S3  = r(k1) + r(k2) + r(k3)
+mu3 = 1 - (beta / 3) * S3
+def cstar3(ki):
+    return (e / mu3) * r(ki)
+
+print("N=3 c1* matches (e/mu) k_i/(lambda+k_i)? ->", is_zero(sol3[c1] - cstar3(k1)))
+print("N=3 c2* matches? ->", is_zero(sol3[c2] - cstar3(k2)))
+print("N=3 c3* matches? ->", is_zero(sol3[c3] - cstar3(k3)))
+
+# Consistency: k1=k2=k3=k  ->  symmetric c* = e k / (lambda + k(1-beta))
+c_sym_n3 = sp.simplify(cstar3(k1).subs({k1: k, k2: k, k3: k}))
+print("N=3 -> symmetric? ->", is_zero(c_sym_n3 - k * e / (lam3 + k * (1 - beta))))
+
+# Ordering: c_i* - c_j* = lambda e (k_i - k_j) / ( mu (lambda+k_i)(lambda+k_j) )
+ord_claim_n3 = lam3 * e * (k1 - k2) / (mu3 * (lam3 + k1) * (lam3 + k2))
+print("N=3 ordering c1*-c2* = lam e (k1-k2)/(mu(lam+k1)(lam+k2))? ->",
+      is_zero(cstar3(k1) - cstar3(k2) - ord_claim_n3))
+
+
+# ------------------------------------------------------------------------------
 # Automated consistency checks (raise if any derivation is wrong)
 # ------------------------------------------------------------------------------
 banner("Automated checks")
@@ -263,6 +309,11 @@ checks = {
     "asymmetric c2*":     is_zero(c2_star - c2_claim),
     "ordering c1*-c2*":   is_zero(diff_12 - e * lam2 * (k1 - k2) / Delta),
     "asym -> sym (n=2)":  is_zero(c1_to_sym - c_sym_n2),
+    "N=3 c1* gen. form":  is_zero(sol3[c1] - cstar3(k1)),
+    "N=3 c2* gen. form":  is_zero(sol3[c2] - cstar3(k2)),
+    "N=3 c3* gen. form":  is_zero(sol3[c3] - cstar3(k3)),
+    "N=3 -> symmetric":   is_zero(c_sym_n3 - k * e / (lam3 + k * (1 - beta))),
+    "N=3 ordering":       is_zero(cstar3(k1) - cstar3(k2) - ord_claim_n3),
 }
 for name, ok in checks.items():
     print(f"  [{'PASS' if ok else 'FAIL'}]  {name}")
