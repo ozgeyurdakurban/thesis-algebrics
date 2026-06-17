@@ -16,7 +16,11 @@ Map to the thesis:
     Step 1  -> Proposition (interior best response)
     Step 2  -> Proposition (symmetric interior Nash) + feasibility + comp. statics
     Step 3  -> Proposition (asymmetric Nash, general n; verified at n=2,3)
-               + altruism ordering
+               + altruism ordering + numerical illustration
+    Remark  -> Normalization A+B=1 is without loss of generality (scale invariance)
+
+The equilibrium comparison with the warm-glow (baseline-T) model is verified in a
+separate script, cd_vs_warmglow_derivations.py.
 
 Requirements:  Python 3,  sympy   (pip install sympy)
 Run:           python cd_equilibrium_derivations.py
@@ -52,13 +56,13 @@ def is_zero(expr):
          'A1': sp.Rational(7, 10), 'B1': sp.Rational(3, 10), 'A2': sp.Rational(1, 2),
          'B2': sp.Rational(1, 2), 'A3': sp.Rational(4, 5), 'B3': sp.Rational(1, 5),
          'kappa': sp.Rational(1, 2), 'k1': sp.Rational(2, 5), 'k2': sp.Rational(7, 10),
-         'c1': sp.Rational(6, 5), 'c2': sp.Rational(9, 5), 'c3': 1},
+         'c1': sp.Rational(6, 5), 'c2': sp.Rational(9, 5), 'c3': 1, 't': sp.Rational(5, 2)},
         {'e': 8, 'beta': sp.Rational(3, 2), 'n': 5, 'A': sp.Rational(1, 2), 'B': sp.Rational(1, 2),
          'lambda': sp.Rational(9, 7), 'c_i': 1, 'C_mi': 2, 'C': 4, 'c': 1,
          'A1': sp.Rational(3, 5), 'B1': sp.Rational(2, 5), 'A2': sp.Rational(3, 4),
          'B2': sp.Rational(1, 4), 'A3': sp.Rational(9, 10), 'B3': sp.Rational(1, 10),
          'kappa': sp.Rational(3, 5), 'k1': sp.Rational(1, 5), 'k2': sp.Rational(4, 5),
-         'c1': sp.Rational(1, 2), 'c2': sp.Rational(3, 2), 'c3': sp.Rational(7, 10)},
+         'c1': sp.Rational(1, 2), 'c2': sp.Rational(3, 2), 'c3': sp.Rational(7, 10), 't': sp.Rational(3, 4)},
     ]
     for pt in pts:
         sub = {s: pt[s.name] for s in expr.free_symbols if s.name in pt}
@@ -90,7 +94,6 @@ banner("Step 1  -  Interior best response")
 print("FOC <=> c_i = kappa X_i (kappa=B/(A theta))? ->",
       is_zero(foc.subs(lam_s, 1) - (B / c_i - A * theta / X_i)) and
       is_zero(B * X_i - A * theta * (kappa * X_i)))   # identity check on kappa
-
 BR  = sp.solve(sp.Eq(c_i, kappa * (e - theta * c_i + (beta / n) * C_mi)), c_i)[0]
 BRc = kappa * (e + (beta / n) * C_mi) / (1 + kappa * theta)
 print("BR = kappa(e+(beta/n)C_-i)/(1+kappa theta)? ->", is_zero(BR - BRc))
@@ -102,7 +105,7 @@ print("strategic complementarity dBR/dC_-i =",
 # ------------------------------------------------------------------------------
 banner("Step 2  -  Symmetric interior Nash equilibrium")
 cstar    = sp.solve(sp.Eq(c, kappa * (e + (beta / n) * (n - 1) * c) / (1 + kappa * theta)), c)[0]
-form_kap = kappa * e / (1 + kappa * (1 - beta))                 # kappa form
+form_kap = kappa * e / (1 + kappa * (1 - beta))                 # kappa form (general A,B)
 form_AB  = B * n * e / (n - beta - B * beta * (n - 1))          # explicit (A+B=1)
 print("c* matches kappa form? ->", is_zero(cstar - form_kap))
 print("kappa form == B-form under A=1-B? ->", is_zero(form_kap.subs(A, 1 - B) - form_AB))
@@ -137,7 +140,6 @@ def kp2(Ai, Bi):  return Bi / (Ai * th2)
 def BR2(Ai, Bi, cj):
     k = kp2(Ai, Bi); return k * (e + (beta / 2) * cj) / (1 + k * th2)
 s2 = sp.solve([sp.Eq(c1, BR2(A1, B1, c2)), sp.Eq(c2, BR2(A2, B2, c1))], [c1, c2], dict=True)[0]
-# general form at n=2
 def phi2(Ai, Bi):
     k = kp2(Ai, Bi); return k / (1 + k)
 mu2 = 1 - (beta / 2) * (phi2(A1, B1) + phi2(A2, B2))
@@ -171,56 +173,48 @@ print("n=3 ordering c1*-c2* = (e/mu)(phi1-phi2)? ->",
       is_zero(ord12 - (e / mu3) * (phi3(A1, B1) - phi3(A2, B2))))
 
 # ------------------------------------------------------------------------------
-# Equilibrium comparison with the warm-glow model   (Y_i = T + c_i)
-# ------------------------------------------------------------------------------
-# Warm-glow CD utility:  U = X^A (T + c)^B ,  baseline T >= 0.
-# Symmetric FOC:  -A theta / X + B / (T + c) = 0   with  C_{-i} = (n-1) c.
-banner("Warm-glow comparison (symmetric)")
-T  = sp.symbols('T', positive=True)
-Xc = e - theta * c + (beta / n) * (n - 1) * c            # X at symmetric profile
-c_wg = sp.solve(sp.Eq(-A * theta / Xc + B / (T + c), 0), c)[0]
-c_wg_claim = (B * n * e - A * (n - beta) * T) / D         # closed form (A+B=1)
-print("WG c* matches [Bne - A(n-b)T]/D (A+B=1)? ->",
-      is_zero(c_wg.subs(A, 1 - B) - c_wg_claim.subs(A, 1 - B)))
-
-c_ib = B * n * e / D                                      # impact-based symmetric
-gap  = sp.simplify(c_ib - c_wg_claim)
-print("c*_IB - c*_WG = A(n-beta)T/D  (>0) ? ->", is_zero(gap - A * (n - beta) * T / D))
-dWG_dT = sp.simplify(sp.diff(c_wg_claim, T))
-print("dc*_WG/dT =", dWG_dT, "  (= -A(n-beta)/D < 0 : baseline crowds out giving)")
-print("existence denom D is T-free (same condition both models)? ->",
-      sp.simplify(sp.diff(D, T)) == 0)
-
-# ------------------------------------------------------------------------------
 # Worked numerical example (n = 2, asymmetric): the altruism ordering
 # ------------------------------------------------------------------------------
 # Parameters: n=2, beta=1.2, e=15, A_i = 1 - B_i.
 # Agent 1 is MORE altruistic (B1=0.2) than agent 2 (B2=0.1).
-# Uses the general asymmetric closed form  c_i* = (e/mu) phi_i ,
-#   phi_i = kappa_i/(1+kappa_i),  kappa_i = B_i/(A_i theta),  mu = 1-(beta/n) sum_j phi_j.
+#   c_i* = (e/mu) phi_i ,  phi_i = kappa_i/(1+kappa_i),  kappa_i = B_i/(A_i theta),
+#   mu = 1 - (beta/n) sum_j phi_j.
 banner("Worked example: altruism ordering (n=2)")
 ex_n, ex_beta, ex_e = 2, sp.Rational(6, 5), 15          # beta = 1.2
 B1_v, B2_v = sp.Rational(1, 5), sp.Rational(1, 10)      # 0.2 and 0.1
 theta_v = 1 - ex_beta / ex_n                            # = 0.4
-
 def _kappa(Bv):                                         # A_i = 1 - B_i
     return Bv / ((1 - Bv) * theta_v)
-
 def _phi(Bv):
     k = _kappa(Bv)
     return k / (1 + k)
-
 phi1_v, phi2_v = _phi(B1_v), _phi(B2_v)
 mu_v = 1 - (ex_beta / ex_n) * (phi1_v + phi2_v)
 c1_v = (ex_e / mu_v) * phi1_v
 c2_v = (ex_e / mu_v) * phi2_v
-
 for nm, v in [("theta", theta_v), ("kappa_1", _kappa(B1_v)), ("kappa_2", _kappa(B2_v)),
               ("phi_1", phi1_v), ("phi_2", phi2_v), ("mu", mu_v),
               ("c_1*", c1_v), ("c_2*", c2_v)]:
     print(f"  {nm:8s} = {float(v):.4f}")
 print(f"  ordering: c_1* > c_2*  ({float(c1_v):.4f} > {float(c2_v):.4f})  since B_1 > B_2")
 print(f"  interior: 0 < c_i* < e={ex_e} ? -> {bool(0 < c2_v and c1_v < ex_e)}")
+
+# ------------------------------------------------------------------------------
+# Normalization A+B=1 is without loss of generality (scale invariance)
+# ------------------------------------------------------------------------------
+# Equilibrium contributions depend on (A,B) only through kappa = B/(A theta),
+# homogeneous of degree 0: scaling (A,B) -> (t A, t B) leaves kappa -- and hence
+# every best response and equilibrium contribution -- unchanged. Imposing A+B=1
+# is therefore WLOG (the monotone rescaling U -> U^{1/(A+B)}); B is then the
+# altruism share.
+banner("Normalization A+B=1 is WLOG (scale invariance)")
+t = sp.symbols('t', positive=True)
+print("kappa = B/(A theta) invariant under (A,B)->(tA,tB)? ->",
+      is_zero((t * B) / ((t * A) * theta) - kappa))
+print("symmetric c* (kappa form) invariant under (A,B)->(tA,tB)? ->",
+      is_zero(form_kap.subs({A: t * A, B: t * B}) - form_kap))
+print("monotone-transform exponents A/(A+B), B/(A+B) sum to 1? ->",
+      sp.simplify(A / (A + B) + B / (A + B)) == 1)
 
 # ------------------------------------------------------------------------------
 # Automated consistency checks
@@ -241,11 +235,10 @@ checks = {
     "n=3 c3* gen form":       is_zero(s3[c3] - cs3(A3, B3)),
     "n=3 -> symmetric":       is_zero(hom3 - form_kap.subs(kappa, B / (A * th3))),
     "n=3 ordering":           is_zero(ord12 - (e / mu3) * (phi3(A1, B1) - phi3(A2, B2))),
-    "WG symmetric c*":        is_zero(c_wg.subs(A, 1 - B) - c_wg_claim.subs(A, 1 - B)),
-    "IB - WG gap":            is_zero(gap - A * (n - beta) * T / D),
-    "WG crowd-out sign":      is_zero(dWG_dT + A * (n - beta) / D),
     "example ordering c1>c2": bool(c1_v > c2_v),
     "example interiority":    bool(0 < c2_v and c1_v < ex_e),
+    "kappa scale-invariant":  is_zero((t * B) / ((t * A) * theta) - kappa),
+    "c* scale-invariant":     is_zero(form_kap.subs({A: t * A, B: t * B}) - form_kap),
 }
 for name, ok in checks.items():
     print(f"  [{'PASS' if ok else 'FAIL'}]  {name}")
