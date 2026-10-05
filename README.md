@@ -32,15 +32,17 @@ Interior first-order condition: `c_i = kappa_i X_i`, with `kappa_i = B_i/(A_i th
 | `network_derivations.py`             | Cycle and star equilibria; center–periphery ordering; position–preference threshold. |
 | `nN3_derivations.py`                 | Explicit `N=3` forms (no-network = cycle, and star). |
 | `network_asymmetric_derivations.py`  | Asymmetric (heterogeneous `B_i`) equilibria: cycle `C_3`/`C_4`, star (general leaves), spectral radius, ordering. |
+| `ces_network_derivations.py`         | CES on the cycle and the star: network FOC `c_i = kappa_i X_i` with `kappa_i = ((1-delta)/(delta theta_i))^sigma Lambda_i^(sigma-1)`; CD limit; sign of `d log kappa / d log Lambda = sigma - 1`; act- vs impact-based coincidence at `sigma = 1`; positional ordering over an `(a, beta, sigma)` grid. Requires `numpy`. |
 
 ## Requirements
 
 ```
 python >= 3.10
 sympy
+numpy   # ces_network_derivations.py only
 ```
 ```
-pip install sympy
+pip install sympy numpy
 ```
 
 ## Run
