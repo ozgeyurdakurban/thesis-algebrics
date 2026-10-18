@@ -45,5 +45,18 @@
   [PASS] odds(impact)/odds(act) = Lambda^(sigma-1): identical shares (and contributions) iff sigma = 1 (Lambda > 1)
 
 ==============================================================================
-SUMMARY s05_ces_best_response: 17 PASS, 0 FAIL
+6. Hicks-Slutsky decomposition of the moral channel
+==============================================================================
+  [PASS] Y = B^s p^-s W/((1-B)^s + B^s p^(1-s)) satisfies the tangency (1-B) X^(rho-1) p = B Y^(rho-1) on X + pY = W
+  [PASS] expenditure share pY/W of this Marshallian demand equals pi (s05 section 1)
+  [PASS] uncompensated own-price elasticity eps = -[sigma (1 - pi) + pi]
+  [PASS] income elasticity of Y = 1 (homothetic)
+  [PASS] Slutsky: compensated elasticity eps^h = eps + pi = -sigma (1 - pi)
+  [PASS] d log c/d log Lambda = sigma(1-pi) [substitution] + pi [income] - 1 [conversion] = (sigma-1)(1-pi)
+  [PASS] d log c/d log theta (holding W) = eps = -[sigma(1-pi) + pi]: own-price elasticity of giving
+  => Cobb-Douglas (sigma = 1): substitution (1-pi) and income (pi) effects sum to 1 and exactly offset the
+     conversion effect: unit price elasticity of the moral good keeps the expenditure share, hence c, constant.
+
+==============================================================================
+SUMMARY s05_ces_best_response: 24 PASS, 0 FAIL
 ==============================================================================

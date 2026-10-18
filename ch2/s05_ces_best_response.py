@@ -150,4 +150,39 @@ L.show("odds(impact)/odds(act)", ratio)
 L.check("odds(impact)/odds(act) = Lambda^(sigma-1): identical shares (and contributions) iff sigma = 1 (Lambda > 1)",
         sp.simplify(ratio - Lam ** (sigma - 1)) == 0)
 
+# ---------------------------------------------------------------------------
+L.head("6. Hicks-Slutsky decomposition of the moral channel")
+# ---------------------------------------------------------------------------
+# Dual problem: with Y = Lambda c the budget X = W - theta c reads X + p Y = W, p = theta/Lambda.
+# Two-good CES demand with income W and prices (1, p); giving is c = Y/Lambda = pY/theta.
+Yd = sp.symbols("Y", positive=True)
+pd, Wd = sp.symbols("p W", positive=True)
+Y_marsh = (B ** sigma * pd ** (-sigma) * Wd) / ((1 - B) ** sigma + B ** sigma * pd ** (1 - sigma))
+okY = all(rel_close(Yd.subs(Yd, Y_marsh) * pd / Wd, pi, {**pt, pd: pt[th] / pt[Lam], p: pt[th] / pt[Lam], Wd: pt[W]})
+          for pt in [sampler() for _ in range(40)])
+tang = (1 - B) * (Wd - pd * Y_marsh) ** (rho - 1) * pd - B * Y_marsh ** (rho - 1)
+okT = all(abs(num(tang, {**pt, pd: rat(0, 3), Wd: pt[W]})) < 1e-25 for pt in [sampler() for _ in range(40)])
+L.check("Y = B^s p^-s W/((1-B)^s + B^s p^(1-s)) satisfies the tangency (1-B) X^(rho-1) p = B Y^(rho-1) on X + pY = W", okT)
+L.check("expenditure share pY/W of this Marshallian demand equals pi (s05 section 1)", okY)
+eps = sp.simplify(sp.diff(sp.log(Y_marsh), pd) * pd)
+pis = B ** sigma * pd ** (1 - sigma) / ((1 - B) ** sigma + B ** sigma * pd ** (1 - sigma))
+L.check("uncompensated own-price elasticity eps = -[sigma (1 - pi) + pi]",
+        all(rel_close(eps, -(sigma * (1 - pis) + pis), {**pt, pd: rat(0, 3)}) for pt in [sampler() for _ in range(40)]))
+L.check("income elasticity of Y = 1 (homothetic)", sp.simplify(sp.diff(sp.log(Y_marsh), Wd) * Wd - 1) == 0)
+# Hicksian (compensated) elasticity from the Slutsky equation: eps^h = eps + pi * eta
+eps_h = sp.simplify(eps + pis * 1)
+L.check("Slutsky: compensated elasticity eps^h = eps + pi = -sigma (1 - pi)",
+        all(rel_close(eps_h, -sigma * (1 - pis), {**pt, pd: rat(0, 3)}) for pt in [sampler() for _ in range(40)]))
+# giving c = Y/Lambda with p = theta/Lambda: d log c / d log Lambda = -eps - 1
+c_of_L = Y_marsh.subs(pd, th / Lam) / Lam
+dlogc = sp.diff(sp.log(c_of_L), Lam) * Lam
+pi_L = pis.subs(pd, th / Lam)
+L.check("d log c/d log Lambda = sigma(1-pi) [substitution] + pi [income] - 1 [conversion] = (sigma-1)(1-pi)",
+        all(rel_close(dlogc, sigma * (1 - pi_L) + pi_L - 1, {**pt}) and rel_close(dlogc, (sigma - 1) * (1 - pi_L), {**pt})
+            for pt in [sampler() for _ in range(40)]))
+L.check("d log c/d log theta (holding W) = eps = -[sigma(1-pi) + pi]: own-price elasticity of giving",
+        all(rel_close(sp.diff(sp.log(c_of_L), th) * th, -(sigma * (1 - pi_L) + pi_L), {**pt}) for pt in [sampler() for _ in range(40)]))
+L.say("  => Cobb-Douglas (sigma = 1): substitution (1-pi) and income (pi) effects sum to 1 and exactly offset the")
+L.say("     conversion effect: unit price elasticity of the moral good keeps the expenditure share, hence c, constant.")
+
 L.finish()

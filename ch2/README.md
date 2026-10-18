@@ -40,7 +40,7 @@ SE = sum_i X_i = n e + sum_i (s_i - 1) c_i ,  s_i = sum_{k in N[i]} beta/d_k
 | `s02_cd_best_response.py` | CD individual problem: demand form `c = B W/theta`, Lambda-irrelevance, SOC, corners, complements | 21 |
 | `s03_cd_symmetric.py` | CD, common B, general n: K_n, C_n, S_n; ceilings (closed-form leaf ceiling), mixed regime, group-size effect, ordering, uniqueness | 40 |
 | `s04_cd_heterogeneous.py` | CD, heterogeneous B_i, general n: K_n; any network `c* = M alpha`, `dc_i/dB_j = M_ij c_j/B_j`; C_n; S_n; threshold `B_C*(B_P, n)`; active set | 34 |
-| `s05_ces_best_response.py` | CES individual problem: share `pi_i`, limits, moral channel (sigma-1), substitution channel threshold `theta/(theta+Lambda)`, act vs impact | 17 |
+| `s05_ces_best_response.py` | CES individual problem: share `pi_i`, limits, moral channel (sigma-1), substitution channel threshold `theta/(theta+Lambda)`, act vs impact, Hicks–Slutsky decomposition | 24 |
 | `s06_ces_homogeneous.py` | CES, common B: K_n, C_n (closed-form ceilings), S_n with position-specific shares; robustness of the positional ordering | 26 |
 | `s07_ces_heterogeneous.py` | CES, heterogeneous B_i: K_n, any network (`dc_i/dB_j` with sigma factor), S_n (+ threshold), C_n; utility-maximisation check | 10 |
 | `s08_small_n.py` | Appendix A: explicit K_2, K_3, K_4, C_4, S_3, S_4 (CD and CES, common and heterogeneous); S_2 = K_2, C_3 = K_3; three-route cross-validation | 21 |
@@ -61,6 +61,7 @@ Cobb–Douglas
 CES
 * Share form: the whole CD apparatus applies with `B_i -> pi_i`; `p_i = theta_i/Lambda_i` is the price of the moral good.
 * Substitution channel: own giving rises with sigma iff `B_i > theta_i/(theta_i + Lambda_i)`.
+* Hicks–Slutsky decomposition: `dlog c/dlog Lambda = sigma(1-pi) [substitution] + pi [income] - 1 [conversion] = (sigma-1)(1-pi)`; Cobb–Douglas neutrality = unit price elasticity of the moral good.
 * Closed-form ceilings on K_n/C_n: `odds = theta Lambda^((1-sigma)/sigma) beta^(-1/sigma)` (impact), `theta beta^(-1/sigma)` (act).
 * Any network: `dc_i*/dB_j = M~_ij c_j* sigma(1-pi_j)/(B_j(1-B_j)) > 0` — H1 robust at every sigma.
 * Ordering: at n = 3 leaf > centre at every sigma (both specs); impact-based reversal possible only for n >= 4, low beta, sigma >= 2. Centre > regular fails under impact-based complements at small B (limit `(Lambda_K/Lambda_C)^(1-sigma)`).
