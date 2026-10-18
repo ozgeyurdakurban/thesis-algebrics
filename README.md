@@ -6,6 +6,13 @@ reported in the **Model** and **Equilibrium Analysis** chapters is re-derived an
 checked symbolically with [SymPy](https://www.sympy.org); each script prints
 `PASS`/`FAIL` per claim and asserts at the end.
 
+## Chapter 2 re-derivation (`ch2/`)
+
+The folder [`ch2/`](ch2/) contains the step-by-step **re-derivation** of Chapter 2:
+each closed form is derived with SymPy (not typed in and checked), compared with the
+thesis text, and exported as LaTeX. See [`ch2/README.md`](ch2/README.md) for the
+roadmap, the new results and the audit notes. Run `python ch2/run_all.py`.
+
 ## Model
 
 Material payoff and (impact-written) moral component

@@ -1,0 +1,49 @@
+
+==============================================================================
+1. K_n, heterogeneous shares pi_i, general n
+==============================================================================
+  [PASS] c_i = phi_i (e + (beta/n) C), phi_i = n pi_i/(n - (1-pi_i) beta)
+  [PASS] C* = e Phi/mu and c_i* = e phi_i/mu, mu = 1 - (beta/n) Phi
+  max deviation (phi/mu formula, active-set solver, utility maximisation) = 2.39e-06
+  [PASS] K_n heterogeneous CES: phi/mu closed form = direct utility maximisation (25 games)
+  [PASS] K_n: contributions ordered by B_i at every sigma (2000 draws)
+
+==============================================================================
+2. Any network: matrix form and comparative statics in B_j
+==============================================================================
+  [PASS] d c_i*/d B_j = M_ij c_j* sigma (1-pi_j)/(B_j(1-B_j)) > 0 (finite differences, K/C/S/path, both specs)
+
+==============================================================================
+3. Star S_n, heterogeneous shares, general n
+==============================================================================
+  [PASS] c_C* = pi_C e [n(2-beta) + 2 beta Sigma_pi] / [(n-beta)(2-beta) - pi_C beta^2 Sigma_pi]
+  [PASS] general-n CES star formula = numerical equilibrium (300 draws, both specs)
+  threshold in shares (centre = leaves): pi_C* = 2 pi_P (n-beta)/[n(2-beta) + (n-2) pi_P beta]   (s04 with B -> pi)
+  image in B: odds(B_C*) = odds(pi_C*)^(1/sigma) * p_C^((sigma-1)/sigma)
+  [PASS] closed-form CES threshold B_C*(B_P): centre and leaves contribute exactly the same (200 draws)
+
+==============================================================================
+4. Cycle C_n: matrix form; ordering by B only on C_3
+==============================================================================
+  [PASS] cycle: (I - Gamma~ A)^{-1} alpha~ = equilibrium (400 draws, n = 4..8)
+
+==============================================================================
+5. Act-based versus impact-based on the star
+==============================================================================
+  n=3, beta=1.5: Lambda_C = 2.500, Lambda_L = 1.500; positional odds factor (impact/act) = (Lambda_L/Lambda_C)^(sigma-1): sigma=0.5 -> 1.291, sigma=2 -> 0.600
+  n=5, beta=1.5: Lambda_C = 4.000, Lambda_L = 1.300; positional odds factor (impact/act) = (Lambda_L/Lambda_C)^(sigma-1): sigma=0.5 -> 1.754, sigma=2 -> 0.325
+  [PASS] impact-based motivation amplifies the leaf-centre odds ratio under complements, compresses it under substitutes (factor (Lambda_L/Lambda_C)^(sigma-1), Lambda_C > Lambda_L)
+
+==============================================================================
+6. Experimental illustration (e=15, n=3, beta=1.5), heterogeneous B
+==============================================================================
+  B=[0.05, 0.1, 0.15], sigma=0.5: regular [4.416, 5.917, 7.001] | star impact [4.621, 8.847, 10.813] | star act [7.882, 11.949, 14.519]
+  B=[0.05, 0.1, 0.15], sigma=1.0: regular [1.954, 3.731, 5.353] | star impact [2.338, 6.701, 10.052] | star act [2.338, 6.701, 10.052]
+  B=[0.05, 0.1, 0.15], sigma=2.0: regular [0.385, 1.597, 3.543] | star impact [0.601, 4.262, 9.73] | star act [0.218, 2.854, 6.719]
+  B=[0.15, 0.05, 0.1], sigma=0.5: regular [7.001, 4.416, 5.917] | star impact [7.417, 7.044, 9.852] | star act [12.329, 9.98, 13.855]
+  B=[0.15, 0.05, 0.1], sigma=1.0: regular [5.353, 1.954, 3.731] | star impact [6.273, 3.941, 7.882] | star act [6.273, 3.941, 7.882]
+  B=[0.15, 0.05, 0.1], sigma=2.0: regular [3.543, 0.385, 1.597] | star impact [4.901, 1.221, 5.152] | star act [1.983, 0.723, 3.104]
+
+==============================================================================
+SUMMARY s07_ces_heterogeneous: 10 PASS, 0 FAIL
+==============================================================================
