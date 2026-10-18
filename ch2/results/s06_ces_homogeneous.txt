@@ -1,0 +1,84 @@
+
+==============================================================================
+1. K_n with a common share pi (general n)
+==============================================================================
+  c*_K(pi) = -e*n*pi/(beta*n*pi - beta*pi + beta - n)
+  [PASS] c*_K = pi n e/(n - beta - pi beta (n-1))  (= CD formula with B -> pi)
+  interiority ceiling on the share = (-beta + n)/(beta*n - beta + n)
+  [PASS] interior  <=>  pi < theta/Lambda = (n-beta)/(n + beta(n-1))
+  [PASS] full income at the full-contribution profile = Lambda e on K_n (W = e + beta(n-1)e/n)
+  [PASS] closed-form B-ceilings: odds(impact) = theta Lambda^((1-sigma)/sigma) beta^(-1/sigma), odds(act) = theta beta^(-1/sigma)  (share hits theta/Lambda exactly)
+  [PASS] both ceilings reduce to the CD ceiling (n-beta)/(n+beta(n-1)) at sigma = 1
+  d log odds(impact ceiling)/d sigma = (log(beta) + log(n) - log(beta*n - beta + n))/sigma**2
+  d log odds(act ceiling)/d sigma = log(beta)/sigma**2
+  [PASS] impact ceiling: d log odds/d sigma = -log(Lambda/beta)/sigma^2
+  [PASS] Lambda_K > beta on the admissible region (so the impact ceiling widens under complements)
+  [PASS] act ceiling INcreasing in sigma (d log odds/d sigma = log(beta)/sigma^2 > 0): the mirror image
+  On K_n, c* is increasing in pi, so sign(dc*/dsigma) = sign(d pi/d sigma) = sign(B - theta/(theta+Lambda)) (s05).
+  [PASS] experiment (regular): contributions rise with sigma iff B > 1/5; interior (CD) iff B < 1/4  => band (0.2, 0.25)
+  B = 0.22: c*(sigma = 0.8, 1, 1.25) = [11.398, 11.7857, 12.2944]
+  B = 0.10: c*(sigma = 0.8, 1, 1.25) = [4.5096, 3.75, 2.9932]
+  [PASS] B = 0.22: contributions INCREASE in sigma; B = 0.10: DECREASE  (the 5th-report claim of monotone decline is not general)
+  K_n: dc*/dbeta < 0 in 1 of 816 interior draws (n = 2..8, sigma in (0.1, 3)); sigmas: [0.162]
+  example K_8, B = 0.0148, sigma = 0.17, beta = 1.401: dc*/dbeta = -0.1949
+  [PASS] dc*/dbeta can be NEGATIVE under strong complements (only sigma < 1 among the draws); the 5th-report statement that beta raises contributions through the Lambda channel holds only for sigma >= 1
+
+==============================================================================
+2. Cycle C_n (d = 3): same forms with n -> 3 in (theta, Lambda); independent of n
+==============================================================================
+  [PASS] c*_cyc = 3 pi e/(3 - beta - 2 pi beta), interior iff pi < (3-beta)/(3+2beta)
+  [PASS] C_n equilibrium under CES is symmetric and equals K_3's for every n (both have d = 3, Lambda = 1 + 2beta/3)
+
+==============================================================================
+3. Star S_n with a common B: position-specific shares (pi_C, pi_L)
+==============================================================================
+  [PASS] c*_C = pi_C e [n(2-beta) + 2(n-1) pi_L beta] / [(n-beta)(2-beta) - (n-1) pi_C pi_L beta^2]
+  [PASS] c*_L = pi_L e [2(n-beta) + n pi_C beta] / same denominator
+  c*_L - c*_C = e*(beta*n*pi_C*pi_L - beta*n*pi_C - 2*beta*pi_C*pi_L + 2*beta*pi_L + 2*n*pi_C - 2*n*pi_L)/(beta**2*n*pi_C*pi_L - beta**2*pi_C*pi_L - beta**2 + beta*n + 2*beta - 2*n)
+  [PASS] leaf > centre  <=>  pi_L [2(n-beta) + n pi_C beta] > pi_C [n(2-beta) + 2(n-1) pi_L beta]
+  n=3, beta=1.2: p_L = 0.2857, p_C = 0.2727
+  n=3, beta=1.5: p_L = 0.1667, p_C = 0.2000
+  n=3, beta=1.9: p_L = 0.0306, p_C = 0.1264
+  n=5, beta=1.2: p_L = 0.3226, p_C = 0.2235
+  n=5, beta=1.5: p_L = 0.1923, p_C = 0.1750
+  n=5, beta=1.9: p_L = 0.0362, p_C = 0.1292
+  (a) experiment n = 3, beta in [1.2, 1.95]: 1088 interior-leaf profiles, violations = 0
+  [PASS] (a) n = 3 on the admissible band beta >= 6/5: leaf > centre at EVERY sigma, both specifications
+  [PASS] (b) act-based specification: leaf > centre for all n = 3..8, beta in (1.05, 1.95), all sigma
+  (c) impact-based, n = 3..8, beta in (1.05, 1.95): violations 983 of 4153; min sigma among violations = 2.00; max beta = 1.50
+      example: n=8, beta=1.05, sigma=8.00, B=0.215: leaf - centre = -13.8098
+  [PASS] (c) impact-based: the ordering CAN reverse, only under substitutes well above unit elasticity (sigma >= 2 on the grid) -- the moral channel Lambda_C > Lambda_L overturns the price channel
+  [PASS] (d) n = 3: leaf > regular member at every sigma, both specifications
+  [PASS] (e) n = 3: centre > regular member at every sigma under the ACT-based specification
+  [PASS] (f) n = 3: centre > regular member under the IMPACT-based specification whenever sigma >= 1
+  (g) impact-based, sigma < 1: centre <= regular in 254 of 471 profiles
+  [PASS] (g) as B -> 0, c_C*/c_K* -> (p_C/p_K)^(1-sigma) = (Lambda_K/Lambda_C)^(1-sigma) < 1 for sigma < 1: under impact-based complements the centre falls below the regular member at small B
+  mixed regime: c_C = pi_C Lambda_K e/theta_C  =>  centre interior iff pi_C < theta_C/Lambda_K = (n-beta)/(n+beta(n-1))
+  [PASS] closed-form centre ceiling: odds = (theta_C/beta)^(1/sigma) p_C^((sigma-1)/sigma)  (q/(1-q) = theta_C/beta)
+
+==============================================================================
+4. Formula-free check: maximise the actual CES utility (no closed forms)
+==============================================================================
+  max |closed form - utility maximisation| = 1.75e-06
+  [PASS] closed forms = direct utility maximisation (40 random games, all topologies, both specs)
+
+==============================================================================
+5. Experimental values (e = 15, n = 3, beta = 1.5, B = 0.10)
+==============================================================================
+  sigma | impact: regular  centre   leaf   gap | act: regular  centre   leaf   gap
+  0.50  |   6.000   6.349   9.468  3.120 |   9.252  10.750  13.178  2.429
+  0.75  |   4.726   5.317   8.317  2.999 |   5.792   6.868   9.655  2.787
+  1.00  |   3.750   4.468   7.340  2.872 |   3.750   4.468   7.340  2.872
+  1.50  |   2.400   3.179   5.784  2.605 |   1.658   1.945   4.540  2.595
+  2.00  |   1.558   2.280   4.610  2.329 |   0.759   0.865   2.946  2.081
+  [PASS] 5th-report numbers reproduced: sigma=2 centre 2.28 (impact) vs 0.87 (act); sigma=1.5 gaps 2.61 vs 2.60
+  ceilings on B (impact / act) by sigma, experiment:
+    sigma=0.50: regular 0.3077 / 0.1818;  star leaf 0.1865 / 0.1181
+    sigma=0.75: regular 0.2684 / 0.2255;  star leaf 0.1731 / 0.1490
+    sigma=1.00: regular 0.2500 / 0.2500;  star leaf 0.1667 / 0.1667
+    sigma=1.50: regular 0.2325 / 0.2762;  star leaf 0.1604 / 0.1855
+    sigma=2.00: regular 0.2240 / 0.2899;  star leaf 0.1573 / 0.1950
+
+==============================================================================
+SUMMARY s06_ces_homogeneous: 26 PASS, 0 FAIL
+==============================================================================
