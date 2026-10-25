@@ -26,7 +26,7 @@ a_i = A_i (X_i/Y_i)^(1/sigma),  A_i = lambda_i B_i/(1-B_i)                      
 ```
 `lambda_i = 0` is the act-based and `lambda_i = 1` the impact-based specification. At `sigma = 1`,
 `pi_i = B_i` and the impact weight drops out. The current derivations are in [`ch2/`](ch2/)
-(`s01`-`s10`, 259 checks); the scripts listed below are the earlier verification of the
+(`s01`-`s10`, 262 checks); the scripts listed below are the earlier verification of the
 5th-monitoring-report formulas and are kept for reference.
 
 ## Files

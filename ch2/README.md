@@ -49,7 +49,7 @@ SE = sum_i X_i = n e + sum_i (s_i - 1) c_i ,  s_i = sum_{k in N[i]} beta/d_k
 | `s07_ces_heterogeneous.py` | CES, heterogeneous B_i: K_n, any network (`dc_i/dB_j` with sigma factor), S_n (+ threshold), C_n; utility-maximisation check | 10 |
 | `s08_small_n.py` | Appendix A: explicit K_2, K_3, K_4, C_4, S_3, S_4 (CD and CES, common and heterogeneous); S_2 = K_2, C_3 = K_3; three-route cross-validation (including a heterogeneous impact weight lambda_i) | 21 |
 | `s09_warmglow.py` | additive-baseline warm-glow benchmark (common and heterogeneous weights) | 10 |
-| `s10_impact_altruism.py` | general model with impact weight: moral component as agency-restricted AGH (1998) utility (lambda = alpha/g); general best response; lambda-invariance iff sigma = 1; dc/dlambda on networks; price elasticity of giving; altruism (CFS 2008 WTP, MAT ordering, OVX-type decomposition); identification of (sigma, lambda) from the n = 3 design and the Star rotation; exact leaf-centre condition and its thresholds | 59 |
+| `s10_impact_altruism.py` | general model with impact weight: moral component as agency-restricted AGH (1998) utility (lambda = alpha/g); general best response; lambda-invariance iff sigma = 1; dc/dlambda on networks; price elasticity of giving; altruism (CFS 2008 WTP, MAT ordering, OVX-type decomposition); identification of (sigma, lambda) from the n = 3 design and the Star rotation; exact leaf-centre condition and its thresholds; equal giving shares across positions iff sigma = 1; dictator share = B at sigma = 1 | 61 |
 | `common.py`, `netlib.py` | symbolic helpers; numerical solvers (closed form on the active set, BR iteration, formula-free utility maximisation) | |
 
 ## Map to the thesis (version of 25 October 2026)
@@ -110,7 +110,7 @@ CES
 * Price elasticity of giving: `eps = -[1 + (sigma-1)(1-pi)]` (CD: -1; Bakija-Heim -0.7 => sigma ~ 0.7).
 * Altruism: `a = A (X/Y)^(1/sigma)`, `A = lambda B/(1-B)`; a = 0 iff lambda = 0; at the optimum a* = lambda p; MAT iff A' >= A and odds(B')/odds(B) (l'/l)^(1-1/sigma) >= 1.
 * Exact leaf-centre condition on S_n: `c_L > c_C  iff  odds(pi_L)/odds(pi_C) > theta_L/theta_C`; with common B, reversal iff lambda > lbar_n(beta) = 2n/[(n^2+n)(2-beta) - 2 beta] and sigma > sigma* = 1 + log(theta_C/theta_L)/log(p_L/p_C). lbar_3(1.5) = 2.
-* Identification: with K_3, centre and leaf observed, (D1, D2) = (sigma-1)(g1(lambda), g2(lambda)) identifies (sigma, lambda) iff sigma != 1.
+* Identification in principle: with K_3, centre and leaf observed, (D1, D2) = (sigma-1)(g1(lambda), g2(lambda)) identifies (sigma, lambda) iff sigma != 1. The experiment is not designed to estimate lambda (exactly identified, signal proportional to sigma - 1); it identifies B_i and tests sigma = 1 through equal giving shares across positions. The single-price dictator decision measures B_i at sigma = 1 for every lambda.
 * Correction: the 5th-report claim "n = 3 leaf > centre at every sigma for every beta in [6/5, 2) (impact-based)" holds only for beta >= 9/7; at beta = 1.2 it reverses for sigma > 9.72 (the earlier grid stopped at sigma = 8).
 
 ## Corrections to the 5th-report Chapter 2 (applied in the thesis text)

@@ -386,6 +386,16 @@ for s_v, l_v in [(0.6, 1.0), (2.0, 0.5), (1.5, 2.0)]:
     okff &= abs(sh - s_v) < 1e-5 and abs(lh - l_v) < 1e-4
 L.check("identification from formula-free equilibria (utility maximisation on K_3 and S_3)", okff)
 
+# testable restriction of the reference specification: (g1, g2) != (0, 0) for every lambda >= 0,
+# so the three giving shares coincide iff sigma = 1
+gn = [num(g1**2 + g2**2, {beta: rat(sp.Rational(6, 5), 2), lam: rat(0, 50)}) for _ in range(400)] + \
+     [num((g1**2 + g2**2).subs(lam, 0), {beta: rat(sp.Rational(6, 5), 2)}) for _ in range(50)]
+L.check("(g1, g2) != (0, 0) for all lambda >= 0: equal giving shares across K, C, L  iff  sigma = 1", min(gn) > 1e-6)
+# the dictator decision (cost 1, impact 1): Cobb-Douglas share donated = B for every lambda
+g_, Ebud = sp.symbols("g E_bud", positive=True)
+foc_d = sp.diff((1 - B) * sp.log(Ebud - g_) + B * sp.log((1 + lam) * g_), g_)
+L.check("dictator, sigma = 1: share donated g/E = B for every impact weight", simp(sp.solve(foc_d, g_)[0] / Ebud - B) == 0)
+
 # within-subject (Star rotation): h(lambda) = log(p_C/p_L) strictly decreasing
 h = sp.log(thC3 * kL3 / (thL3 * kC3))
 dh = simp(sp.diff(h, lam))

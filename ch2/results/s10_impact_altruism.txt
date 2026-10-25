@@ -93,6 +93,8 @@
     true (sigma, lambda) = (2.0, 0.5)  recovered from formula-free equilibria: (2.000000, 0.500001)
     true (sigma, lambda) = (1.5, 2.0)  recovered from formula-free equilibria: (1.500000, 2.000000)
   [PASS] identification from formula-free equilibria (utility maximisation on K_3 and S_3)
+  [PASS] (g1, g2) != (0, 0) for all lambda >= 0: equal giving shares across K, C, L  iff  sigma = 1
+  [PASS] dictator, sigma = 1: share donated g/E = B for every impact weight
   [PASS] h(lambda) = log(p_C/p_L) strictly decreasing => lambda_i identified from one rotation given sigma != 1
   [PASS] experimental beta = 3/2: h(lambda) = 0 at lambda = 2 (p_C = p_L)
 
@@ -131,5 +133,5 @@
     lambda = 2.0: regular 0.1667, centre 0.1250, leaf 0.1250
 
 ==============================================================================
-SUMMARY s10_impact_altruism: 59 PASS, 0 FAIL
+SUMMARY s10_impact_altruism: 61 PASS, 0 FAIL
 ==============================================================================
