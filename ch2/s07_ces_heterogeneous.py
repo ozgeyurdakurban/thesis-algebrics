@@ -42,22 +42,22 @@ L.tex_eq("CES K_n het", r"c_i^\star", e * sp.Symbol(r"\varphi_i") / (1 - beta / 
 worst = 0.0
 for _ in range(25):
     m = int(rng.integers(2, 6)); b = rng.uniform(1.05, min(m, 3) - 0.05); sg = float(rng.choice([0.3, 0.6, 1.4, 2.5]))
-    Bv = rng.uniform(0.02, 0.2, m); imp = bool(rng.integers(0, 2))
+    Bv = rng.uniform(0.02, 0.2, m); lam = float(rng.choice([0.0, 1.0, rng.uniform(0, 3)]))
     G = NL.complete(m)
-    pi = NL.shares(G, Bv, b, sg, imp)
+    pi = NL.shares(G, Bv, b, sg, lam=lam)
     ph = m * pi / (m - (1 - pi) * b); mu = 1 - b / m * ph.sum()
-    x = NL.nash_closed(G, Bv, b, 15.0, sg, imp)
+    x = NL.nash_closed(G, Bv, b, 15.0, sg, lam=lam)
     if mu > 0 and np.all(15 * ph / mu < 15):
         worst = max(worst, np.max(abs(x - 15 * ph / mu)))
-    worst = max(worst, np.max(abs(x - NL.nash_utility(G, Bv, b, 15.0, sg, imp))))
+    worst = max(worst, np.max(abs(x - NL.nash_utility(G, Bv, b, 15.0, sg, lam=lam))))
 L.say(f"  max deviation (phi/mu formula, active-set solver, utility maximisation) = {worst:.2e}")
-L.check("K_n heterogeneous CES: phi/mu closed form = direct utility maximisation (25 games)", worst < 1e-5)
+L.check("K_n heterogeneous CES: phi/mu closed form = direct utility maximisation (25 games, impact weight lambda in {0, 1, U(0,3)})", worst < 1e-5)
 ok = True
 for _ in range(2000):
     m = int(rng.integers(2, 7)); b = rng.uniform(1.05, m - 0.05); sg = rng.uniform(0.1, 5)
-    Bv = rng.uniform(0.01, 0.4, m); x = NL.nash_closed(NL.complete(m), Bv, b, 15.0, sg, bool(rng.integers(0, 2)))
+    Bv = rng.uniform(0.01, 0.4, m); x = NL.nash_closed(NL.complete(m), Bv, b, 15.0, sg, lam=float(rng.uniform(0, 3)))
     o = np.argsort(Bv); ok &= bool(np.all(np.diff(x[o]) >= -1e-10))
-L.check("K_n: contributions ordered by B_i at every sigma (2000 draws)", ok)
+L.check("K_n: contributions ordered by B_i at every sigma and common lambda (2000 draws)", ok)
 
 # ===========================================================================
 L.head("2. Any network: matrix form and comparative statics in B_j")
@@ -72,21 +72,21 @@ for _ in range(120):
     else:
         G = [NL.complete, NL.cycle, NL.star][kind](m)
     d = G.sum(1) + 1
-    b = rng.uniform(1.05, min(d.min(), 3) - 0.05); sg = float(rng.uniform(0.3, 3)); imp = bool(rng.integers(0, 2))
+    b = rng.uniform(1.05, min(d.min(), 3) - 0.05); sg = float(rng.uniform(0.3, 3)); lam = float(rng.choice([0.0, 1.0, rng.uniform(0, 3)]))
     Bv = rng.uniform(0.01, 0.06, m)
-    x = NL.nash_closed(G, Bv, b, 15.0, sg, imp)
+    x = NL.nash_closed(G, Bv, b, 15.0, sg, lam=lam)
     if x.max() >= 15 - 1e-6:
         continue
-    pi = NL.shares(G, Bv, b, sg, imp)
+    pi = NL.shares(G, Bv, b, sg, lam=lam)
     gam = pi * b / (d - b)
     M = np.linalg.inv(np.eye(m) - gam[:, None] * G)
     for j in range(m):
         h = 1e-5 * Bv[j]
         Bp = Bv.copy(); Bp[j] += h; Bm = Bv.copy(); Bm[j] -= h
-        fd = (NL.nash_closed(G, Bp, b, 15.0, sg, imp) - NL.nash_closed(G, Bm, b, 15.0, sg, imp)) / (2 * h)
+        fd = (NL.nash_closed(G, Bp, b, 15.0, sg, lam=lam) - NL.nash_closed(G, Bm, b, 15.0, sg, lam=lam)) / (2 * h)
         an = M[:, j] * x[j] * sg * (1 - pi[j]) / (Bv[j] * (1 - Bv[j]))
         ok &= np.allclose(fd, an, rtol=1e-4, atol=1e-6) and np.all(an > 0)
-L.check("d c_i*/d B_j = M_ij c_j* sigma (1-pi_j)/(B_j(1-B_j)) > 0 (finite differences, K/C/S/path, both specs)", ok)
+L.check("d c_i*/d B_j = M_ij c_j* sigma (1-pi_j)/(B_j(1-B_j)) > 0 (finite differences, K/C/S/path, general impact weight)", ok)
 
 # ===========================================================================
 L.head("3. Star S_n, heterogeneous shares, general n")
@@ -99,15 +99,15 @@ L.tex_eq("CES star centre het", r"c_C^\star", cCs)
 L.tex_eq("CES star leaf het", r"c_j^\star", pij * (2 * e + beta * sp.Symbol("c_C^\\star")) / (2 - beta))
 okS = True
 for _ in range(300):
-    m = int(rng.integers(3, 9)); b = rng.uniform(1.05, 1.95); sg = float(rng.uniform(0.2, 4)); imp = bool(rng.integers(0, 2))
+    m = int(rng.integers(3, 9)); b = rng.uniform(1.05, 1.95); sg = float(rng.uniform(0.2, 4)); lam = float(rng.choice([0.0, 1.0, rng.uniform(0, 3)]))
     Bv = rng.uniform(0.005, 0.08, m); G = NL.star(m)
-    x = NL.nash_closed(G, Bv, b, 15.0, sg, imp)
+    x = NL.nash_closed(G, Bv, b, 15.0, sg, lam=lam)
     if x.max() >= 15 - 1e-9:
         continue
-    pi = NL.shares(G, Bv, b, sg, imp); sp_ = pi[1:].sum()
+    pi = NL.shares(G, Bv, b, sg, lam=lam); sp_ = pi[1:].sum()
     cc = pi[0] * 15 * (m * (2 - b) + 2 * b * sp_) / ((m - b) * (2 - b) - pi[0] * b**2 * sp_)
     okS &= abs(cc - x[0]) < 1e-9 and np.allclose(pi[1:] * (30 + b * cc) / (2 - b), x[1:], atol=1e-9)
-L.check("general-n CES star formula = numerical equilibrium (300 draws, both specs)", okS)
+L.check("general-n CES star formula = numerical equilibrium (300 draws, general impact weight)", okS)
 # threshold in shares and its image in B
 piP = sp.symbols("pi_P", positive=True)
 thr_pi = 2 * piP * (n - beta) / (n * (2 - beta) + (n - 2) * piP * beta)
@@ -115,18 +115,18 @@ L.say("  threshold in shares (centre = leaves): pi_C* = 2 pi_P (n-beta)/[n(2-bet
 L.say("  image in B: odds(B_C*) = odds(pi_C*)^(1/sigma) * p_C^((sigma-1)/sigma)")
 okT = True
 for _ in range(200):
-    m = int(rng.integers(3, 8)); b = rng.uniform(1.2, 1.95); sg = float(rng.uniform(0.3, 3)); imp = bool(rng.integers(0, 2))
+    m = int(rng.integers(3, 8)); b = rng.uniform(1.2, 1.95); sg = float(rng.uniform(0.3, 3)); lam = float(rng.choice([0.0, 1.0, rng.uniform(0, 3)]))
     BP = rng.uniform(0.01, 0.06)
     d, th, La, _ = NL.primitives(NL.star(m), b)
-    p = th / La if imp else th
+    p = th / (1 + lam * (La - 1))
     piPv = 1 / (1 + ((1 - BP) / BP) ** sg * p[1] ** (sg - 1))
     tpi = 2 * piPv * (m - b) / (m * (2 - b) + (m - 2) * piPv * b)
     oB = (tpi / (1 - tpi)) ** (1 / sg) * p[0] ** ((sg - 1) / sg)
     BCs = oB / (1 + oB)
-    x = NL.nash_closed(NL.star(m), [BCs] + [BP] * (m - 1), b, 15.0, sg, imp)
+    x = NL.nash_closed(NL.star(m), [BCs] + [BP] * (m - 1), b, 15.0, sg, lam=lam)
     if x.max() < 15 - 1e-9:
         okT &= abs(x[0] - x[1]) < 1e-8
-L.check("closed-form CES threshold B_C*(B_P): centre and leaves contribute exactly the same (200 draws)", okT)
+L.check("closed-form CES threshold B_C*(B_P): centre and leaves contribute exactly the same (200 draws, general impact weight)", okT)
 
 # ===========================================================================
 L.head("4. Cycle C_n: matrix form; ordering by B only on C_3")

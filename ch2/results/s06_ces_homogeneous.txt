@@ -43,7 +43,9 @@
   n=5, beta=1.5: p_L = 0.1923, p_C = 0.1750
   n=5, beta=1.9: p_L = 0.0362, p_C = 0.1292
   (a) experiment n = 3, beta in [1.2, 1.95]: 1088 interior-leaf profiles, violations = 0
-  [PASS] (a) n = 3 on the admissible band beta >= 6/5: leaf > centre at EVERY sigma, both specifications
+  [PASS] (a) n = 3, beta in [1.2, 1.95], sigma <= 8 (grid): leaf > centre, both specifications
+  impact-based, n = 3, beta = 1.2, sigma = 12, B = 0.01: leaf - centre = -0.00000
+  [PASS] (a') impact-based, n = 3: leaf > centre at sigma up to 50 for beta >= 9/7, but REVERSES at beta = 1.2, sigma = 12 (sigma* = 9.72; the 5th-report claim 'every beta >= 6/5, every sigma' is corrected)
   [PASS] (b) act-based specification: leaf > centre for all n = 3..8, beta in (1.05, 1.95), all sigma
   (c) impact-based, n = 3..8, beta in (1.05, 1.95): violations 983 of 4153; min sigma among violations = 2.00; max beta = 1.50
       example: n=8, beta=1.05, sigma=8.00, B=0.215: leaf - centre = -13.8098
@@ -59,8 +61,8 @@
 ==============================================================================
 4. Formula-free check: maximise the actual CES utility (no closed forms)
 ==============================================================================
-  max |closed form - utility maximisation| = 1.75e-06
-  [PASS] closed forms = direct utility maximisation (40 random games, all topologies, both specs)
+  max |closed form - utility maximisation| = 1.59e-06
+  [PASS] closed forms = direct utility maximisation (40 random games, all topologies, impact weight lambda in {0, 1, U(0,3)})
 
 ==============================================================================
 5. Experimental values (e = 15, n = 3, beta = 1.5, B = 0.10)
@@ -80,5 +82,5 @@
     sigma=2.00: regular 0.2240 / 0.2899;  star leaf 0.1573 / 0.1950
 
 ==============================================================================
-SUMMARY s06_ces_homogeneous: 26 PASS, 0 FAIL
+SUMMARY s06_ces_homogeneous: 27 PASS, 0 FAIL
 ==============================================================================

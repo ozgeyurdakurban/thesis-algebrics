@@ -14,6 +14,9 @@ Derives, for an arbitrary undirected network g without self-loops:
 
 Everything is derived from the adjacency matrix of explicit graphs (n = 3..8)
 and from the general-n structure, and the two are cross-checked.
+
+Thesis numbering (version of 25 Oct 2026): eq. (2.18) and the positional primitives of Section 2.3;
+the effective impact multiplier Lambda~ = 1 + lambda (Lambda - 1) is treated in s10.
 """
 
 import sympy as sp

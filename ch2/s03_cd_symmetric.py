@@ -16,6 +16,8 @@ Derived here:
         mixed regime (leaves at e, centre interior), the centre ceiling,
         contraction, comparative statics;
   numerical: least and greatest equilibria coincide (uniqueness) on a grid.
+
+Thesis numbering (version of 25 Oct 2026): Lemma 2.4.8, Propositions 2.4.9-2.4.14.
 """
 
 import random

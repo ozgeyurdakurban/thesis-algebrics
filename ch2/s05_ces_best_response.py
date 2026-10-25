@@ -18,6 +18,11 @@ Derived here:
   * the sigma channel  d log odds(pi)/d sigma = log(B Lambda/((1-B) theta)),
     hence own giving rises with sigma iff B > theta/(theta + Lambda);
   * act-based (Lambda = 1) vs impact-based shares coincide iff sigma = 1.
+
+Thesis numbering (version of 25 Oct 2026): Lemma 2.4.1, Prop. 2.4.2, Remark 2.4.3,
+Cor. 2.4.4. Here Lambda is the impact multiplier of the impact-based specification
+(lambda = 1); the same derivations with the effective multiplier
+Lambda~ = 1 + lambda (Lambda - 1) for a general impact weight are in s10.
 """
 
 import random

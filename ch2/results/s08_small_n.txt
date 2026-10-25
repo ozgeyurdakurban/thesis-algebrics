@@ -36,26 +36,32 @@
 ==============================================================================
 3. Formula-free numerical check (maximise the actual utilities)
 ==============================================================================
-   (21 of the draws had agents at the corner; compared through the active-set closed form)
+   (14 of the draws had agents at the corner; compared through the active-set closed form)
    K_2 CD          : max |general-N formula - utility maximisation| = 5.7e-07
    K_2 CES-impact  : max |general-N formula - utility maximisation| = 3.2e-07
    K_2 CES-act     : max |general-N formula - utility maximisation| = 8.2e-07
-   K_3 CD          : max |general-N formula - utility maximisation| = 5.6e-07
-   K_3 CES-impact  : max |general-N formula - utility maximisation| = 1.2e-06
-   K_3 CES-act     : max |general-N formula - utility maximisation| = 3.5e-07
-   K_4 CD          : max |general-N formula - utility maximisation| = 2.1e-06
-   K_4 CES-impact  : max |general-N formula - utility maximisation| = 1.9e-06
-   K_4 CES-act     : max |general-N formula - utility maximisation| = 5.3e-07
-   C_4 CD          : max |general-N formula - utility maximisation| = 1.5e-06
-   C_4 CES-impact  : max |general-N formula - utility maximisation| = 1.9e-06
-   C_4 CES-act     : max |general-N formula - utility maximisation| = 4.5e-07
-   S_3 CD          : max |general-N formula - utility maximisation| = 1.8e-06
-   S_3 CES-impact  : max |general-N formula - utility maximisation| = 1.2e-06
-   S_3 CES-act     : max |general-N formula - utility maximisation| = 8.4e-07
-   S_4 CD          : max |general-N formula - utility maximisation| = 6.3e-07
-   S_4 CES-impact  : max |general-N formula - utility maximisation| = 8.7e-07
-   S_4 CES-act     : max |general-N formula - utility maximisation| = 1.3e-06
-  [PASS] all small-N cases: general-N formula = formula-free equilibrium (CD, CES impact, CES act; common and heterogeneous B)
+   K_2 CES-lambda_i: max |general-N formula - utility maximisation| = 2.2e-06
+   K_3 CD          : max |general-N formula - utility maximisation| = 9.2e-07
+   K_3 CES-impact  : max |general-N formula - utility maximisation| = 7.5e-07
+   K_3 CES-act     : max |general-N formula - utility maximisation| = 7.6e-07
+   K_3 CES-lambda_i: max |general-N formula - utility maximisation| = 1.4e-06
+   K_4 CD          : max |general-N formula - utility maximisation| = 1.0e-06
+   K_4 CES-impact  : max |general-N formula - utility maximisation| = 7.2e-07
+   K_4 CES-act     : max |general-N formula - utility maximisation| = 3.8e-07
+   K_4 CES-lambda_i: max |general-N formula - utility maximisation| = 6.3e-07
+   C_4 CD          : max |general-N formula - utility maximisation| = 4.4e-07
+   C_4 CES-impact  : max |general-N formula - utility maximisation| = 1.5e-06
+   C_4 CES-act     : max |general-N formula - utility maximisation| = 6.8e-07
+   C_4 CES-lambda_i: max |general-N formula - utility maximisation| = 3.5e-07
+   S_3 CD          : max |general-N formula - utility maximisation| = 1.1e-06
+   S_3 CES-impact  : max |general-N formula - utility maximisation| = 4.2e-07
+   S_3 CES-act     : max |general-N formula - utility maximisation| = 6.4e-07
+   S_3 CES-lambda_i: max |general-N formula - utility maximisation| = 1.7e-06
+   S_4 CD          : max |general-N formula - utility maximisation| = 1.0e-06
+   S_4 CES-impact  : max |general-N formula - utility maximisation| = 5.1e-07
+   S_4 CES-act     : max |general-N formula - utility maximisation| = 4.3e-07
+   S_4 CES-lambda_i: max |general-N formula - utility maximisation| = 1.1e-06
+  [PASS] all small-N cases: general-N formula = formula-free equilibrium (CD; CES with lambda = 1, 0 and heterogeneous lambda_i; common and heterogeneous B)
 
 ==============================================================================
 SUMMARY s08_small_n: 21 PASS, 0 FAIL

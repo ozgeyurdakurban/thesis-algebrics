@@ -4,23 +4,23 @@
 ==============================================================================
   [PASS] c_i = phi_i (e + (beta/n) C), phi_i = n pi_i/(n - (1-pi_i) beta)
   [PASS] C* = e Phi/mu and c_i* = e phi_i/mu, mu = 1 - (beta/n) Phi
-  max deviation (phi/mu formula, active-set solver, utility maximisation) = 2.39e-06
-  [PASS] K_n heterogeneous CES: phi/mu closed form = direct utility maximisation (25 games)
-  [PASS] K_n: contributions ordered by B_i at every sigma (2000 draws)
+  max deviation (phi/mu formula, active-set solver, utility maximisation) = 1.05e-06
+  [PASS] K_n heterogeneous CES: phi/mu closed form = direct utility maximisation (25 games, impact weight lambda in {0, 1, U(0,3)})
+  [PASS] K_n: contributions ordered by B_i at every sigma and common lambda (2000 draws)
 
 ==============================================================================
 2. Any network: matrix form and comparative statics in B_j
 ==============================================================================
-  [PASS] d c_i*/d B_j = M_ij c_j* sigma (1-pi_j)/(B_j(1-B_j)) > 0 (finite differences, K/C/S/path, both specs)
+  [PASS] d c_i*/d B_j = M_ij c_j* sigma (1-pi_j)/(B_j(1-B_j)) > 0 (finite differences, K/C/S/path, general impact weight)
 
 ==============================================================================
 3. Star S_n, heterogeneous shares, general n
 ==============================================================================
   [PASS] c_C* = pi_C e [n(2-beta) + 2 beta Sigma_pi] / [(n-beta)(2-beta) - pi_C beta^2 Sigma_pi]
-  [PASS] general-n CES star formula = numerical equilibrium (300 draws, both specs)
+  [PASS] general-n CES star formula = numerical equilibrium (300 draws, general impact weight)
   threshold in shares (centre = leaves): pi_C* = 2 pi_P (n-beta)/[n(2-beta) + (n-2) pi_P beta]   (s04 with B -> pi)
   image in B: odds(B_C*) = odds(pi_C*)^(1/sigma) * p_C^((sigma-1)/sigma)
-  [PASS] closed-form CES threshold B_C*(B_P): centre and leaves contribute exactly the same (200 draws)
+  [PASS] closed-form CES threshold B_C*(B_P): centre and leaves contribute exactly the same (200 draws, general impact weight)
 
 ==============================================================================
 4. Cycle C_n: matrix form; ordering by B only on C_3

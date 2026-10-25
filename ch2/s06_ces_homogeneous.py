@@ -3,7 +3,9 @@ Step 3b -- CES equilibria under a COMMON prosocial weight B on K_n, C_n, S_n (ge
 
 By s05, the CES best response is c_i = (pi_i/theta_i) W_i with the share
     pi_i = 1/(1 + ((1-B)/B)^sigma p_i^(sigma-1)),
-    p_i = theta_i/Lambda_i (impact-based) or theta_i (act-based).
+    p_i = theta_i/Lambda~_i,  Lambda~_i = 1 + lambda_i (Lambda_i - 1)
+    (impact-based lambda = 1, act-based lambda = 0; general lambda and the exact
+    leaf-centre condition are derived in s10).
 With a common B the share is common on regular graphs but POSITION-SPECIFIC on the
 star (p_C != p_L), so the CES star with a common weight is a star with heterogeneous
 shares.
@@ -169,8 +171,22 @@ SIG = np.concatenate([np.linspace(0.1, 1, 7), np.linspace(1.25, 8, 10)])
 BB = np.linspace(0.005, 0.6, 18)
 r_exp = ordering_scan([3], np.linspace(1.2, 1.95, 7), SIG, BB, (True, False))
 L.say(f"  (a) experiment n = 3, beta in [1.2, 1.95]: {len(r_exp)} interior-leaf profiles, violations = {sum(g <= 0 for *_, g in r_exp)}")
-L.check("(a) n = 3 on the admissible band beta >= 6/5: leaf > centre at EVERY sigma, both specifications",
+L.check("(a) n = 3, beta in [1.2, 1.95], sigma <= 8 (grid): leaf > centre, both specifications",
         all(g > 0 for *_, g in r_exp))
+# Correction (thesis Prop. 2.4.24, exact condition derived in s10): the grid above stops at sigma = 8.
+# Impact-based at n = 3 the ordering holds at EVERY sigma iff beta >= 9/7; below, it reverses for sigma > sigma*.
+big = []
+for b in (9 / 7 + 1e-6, 1.35, 1.5, 1.8, 1.95):
+    for sg in (10.0, 20.0, 50.0):
+        for Bv in (1e-4, 0.01, 0.05):
+            x = NL.nash_closed(NL.star(3), [Bv] * 3, b, 15.0, sg, True)
+            if x[1] < 15 - 1e-9:
+                big.append(x[1] - x[0])
+x12 = NL.nash_closed(NL.star(3), [0.01] * 3, 1.2, 15.0, 12.0, True)
+L.say(f"  impact-based, n = 3, beta = 1.2, sigma = 12, B = 0.01: leaf - centre = {x12[1] - x12[0]:.5f}")
+L.check("(a') impact-based, n = 3: leaf > centre at sigma up to 50 for beta >= 9/7, but REVERSES at beta = 1.2, sigma = 12 "
+        "(sigma* = 9.72; the 5th-report claim 'every beta >= 6/5, every sigma' is corrected)",
+        len(big) > 0 and all(g > 0 for g in big) and x12[1] < x12[0])
 r_act = ordering_scan(range(3, 9), np.linspace(1.05, 1.95, 7), SIG, BB, (False,))
 L.check("(b) act-based specification: leaf > centre for all n = 3..8, beta in (1.05, 1.95), all sigma",
         all(g > 0 for *_, g in r_act))
@@ -242,12 +258,13 @@ worst = 0.0
 for _ in range(40):
     kind = int(rng.integers(0, 3)); m = int(rng.integers(3, 6))
     G = [NL.complete, NL.cycle, NL.star][kind](m)
-    b = rng.uniform(1.05, 1.95); sg = float(rng.choice([0.4, 0.7, 1.0, 1.5, 2.5])); imp = bool(rng.integers(0, 2))
+    b = rng.uniform(1.05, 1.95); sg = float(rng.choice([0.4, 0.7, 1.0, 1.5, 2.5]))
+    lam = float(rng.choice([0.0, 1.0, rng.uniform(0, 3)]))       # general impact weight
     Bv = [rng.uniform(0.02, 0.3)] * m
-    x = NL.nash_closed(G, Bv, b, 15.0, sg, imp); y = NL.nash_utility(G, Bv, b, 15.0, sg, imp)
+    x = NL.nash_closed(G, Bv, b, 15.0, sg, lam=lam); y = NL.nash_utility(G, Bv, b, 15.0, sg, lam=lam)
     worst = max(worst, np.max(abs(x - y)))
 L.say(f"  max |closed form - utility maximisation| = {worst:.2e}")
-L.check("closed forms = direct utility maximisation (40 random games, all topologies, both specs)", worst < 1e-5)
+L.check("closed forms = direct utility maximisation (40 random games, all topologies, impact weight lambda in {0, 1, U(0,3)})", worst < 1e-5)
 
 # ===========================================================================
 L.head("5. Experimental values (e = 15, n = 3, beta = 1.5, B = 0.10)")

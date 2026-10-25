@@ -8,6 +8,9 @@ Derived here:
   * heterogeneous weights: c_i*_WG = phi_i (e - (beta/n) T Q)/mu - T/(1+kappa_i),
     Q = sum_j 1/(1+kappa_j), and the agent-specific gap (Appendix C);
   * n = 2: (gap_1 - gap_2)/(B_1 - B_2) closed form.
+
+Thesis numbering (version of 25 Oct 2026): Proposition 2.4.29 and Appendix C (warm-glow section);
+the act-based specification (lambda = 0) is the T = 0 case.
 """
 
 import sympy as sp

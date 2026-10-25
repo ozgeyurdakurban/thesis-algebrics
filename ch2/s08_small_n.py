@@ -5,7 +5,8 @@ For every network used in the appendix -- K_2, K_3, K_4, C_4, S_3, S_4 (and the
 identities S_2 = K_2, C_3 = K_3) -- and for every specification:
 
   (a) CD, common B          (b) CD, heterogeneous B_i
-  (c) CES, common B         (d) CES, heterogeneous B_i   (impact- and act-based)
+  (c) CES, common B         (d) CES, heterogeneous B_i   (impact- and act-based, and a
+                                                         heterogeneous impact weight lambda_i)
 
 three independent routes are compared:
   1. DIRECT    : the first-order conditions of the actual utilities of the N agents are
@@ -17,6 +18,8 @@ three independent routes are compared:
   3. NUMERICAL : formula-free Nash equilibrium obtained by maximising each agent's actual
                  utility function on [0, e] (netlib.nash_utility).
 The explicit formulas are exported to ch2/tex/s08_small_n.tex for the appendix.
+
+Thesis numbering (version of 25 Oct 2026): Appendix A.
 """
 
 import random
@@ -175,27 +178,30 @@ n_corner = [0]
 for kind, m in CASES:
     Gm = graph(kind, m)
     bmax = min(Gm.sum(1).min() + 1, 3)
-    for spec in ("CD", "CES-impact", "CES-act"):
+    for spec in ("CD", "CES-impact", "CES-act", "CES-lambda_i"):
         for hom in (True, False):
             for _ in range(2):
                 b = rng.uniform(1.05, bmax - 0.05)
                 sg = 1.0 if spec == "CD" else float(rng.choice([0.4, 0.7, 1.5, 2.5]))
                 Bv = np.full(m, rng.uniform(0.02, 0.15)) if hom else rng.uniform(0.02, 0.15, m)
-                imp = spec != "CES-act"
+                # impact weight: 1 (impact-based), 0 (act-based), or heterogeneous lambda_i ~ U(0, 3)
+                lam = {"CD": 1.0, "CES-impact": 1.0, "CES-act": 0.0}.get(spec)
+                if lam is None:
+                    lam = rng.uniform(0, 3, m)
                 # closed form through the general-N formula, numerically
-                pi = NL.shares(Gm, Bv, b, sg, imp)
+                pi = NL.shares(Gm, Bv, b, sg, lam=lam)
                 gen = general(kind, m, [sp.Float(x, 30) for x in pi])
                 gen = np.array([float(sp.N(g.subs({beta: b, e: 15}))) for g in gen])
                 if not (gen.min() > 0 and gen.max() < 15):   # outside the interior region the interior
-                    gen = NL.nash_closed(Gm, Bv, b, 15.0, sg, imp)   # formula does not apply: use the
+                    gen = NL.nash_closed(Gm, Bv, b, 15.0, sg, lam=lam)   # formula does not apply: use the
                     n_corner[0] += 1                                 # closed form on the corner set
-                num = NL.nash_utility(Gm, Bv, b, 15.0, sg, imp)
+                num = NL.nash_utility(Gm, Bv, b, 15.0, sg, lam=lam)
                 key = f"{kind}_{m} {spec}"
                 worst[key] = max(worst.get(key, 0), float(np.max(abs(gen - num))))
 L.say(f"   ({n_corner[0]} of the draws had agents at the corner; compared through the active-set closed form)")
 for k, v in worst.items():
     L.say(f"   {k:16s}: max |general-N formula - utility maximisation| = {v:.1e}")
-L.check("all small-N cases: general-N formula = formula-free equilibrium (CD, CES impact, CES act; common and heterogeneous B)",
+L.check("all small-N cases: general-N formula = formula-free equilibrium (CD; CES with lambda = 1, 0 and heterogeneous lambda_i; common and heterogeneous B)",
         max(worst.values()) < 1e-5)
 
 L.finish()

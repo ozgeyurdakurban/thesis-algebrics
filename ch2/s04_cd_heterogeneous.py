@@ -17,6 +17,8 @@ Derived here:
      general on C_n, n >= 4 (counterexample);
   5. Mixed regimes (agents at e): active-set characterisation;
   6. Consistency: every heterogeneous formula reduces to the homogeneous one of s03.
+
+Thesis numbering (version of 25 Oct 2026): Propositions 2.4.15-2.4.20, Lemma 2.4.17.
 """
 
 import random

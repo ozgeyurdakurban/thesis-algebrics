@@ -15,6 +15,10 @@ Derived here (no formula typed in):
   * irrelevance of Lambda (it scales the moral good, not its price);
   * SOC (strict log-concavity), absence of the lower corner, the upper-corner rule;
   * strategic complementarity, scale invariance in (A,B), monotonicity in B.
+
+Thesis numbering (version of 25 Oct 2026): Lemma 2.4.6, Remark 2.4.7 (the sigma = 1 reference
+specification); Remark 2.3.1 (normalization). Lambda here stands for any positive conversion
+factor, so the neutrality result covers the effective multiplier Lambda~ for every impact weight.
 """
 
 import random
