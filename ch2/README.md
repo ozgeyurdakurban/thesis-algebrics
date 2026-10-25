@@ -24,11 +24,15 @@ a non-zero status if any check fails.
 
 ```
 X_i = W_i - theta_i c_i ,  W_i = e + (beta/d_i) S_i ,  S_i = sum_{j in G_i} c_j ,  theta_i = 1 - beta/d_i
-Y_i = Lambda_i c_i ,  Lambda_i = 1 + sum_{j in G_i} beta/d_j        (impact multiplier)
-Cobb-Douglas:  U_i = X_i^{1-B_i} Y_i^{B_i}
-CES:           U_i = [(1-B_i) X_i^rho + B_i Y_i^rho]^{1/rho} ,  sigma = 1/(1-rho),  B_i = 1 - delta_i
+Y_i = c_i + lambda_i sum_{j in G_i} (beta/d_j) c_i = Lambda~_i c_i
+      Lambda_i  = 1 + sum_{j in G_i} beta/d_j          (impact multiplier)
+      Lambda~_i = 1 + lambda_i (Lambda_i - 1)           (effective impact multiplier)
+      lambda_i >= 0 impact weight: 0 = act-based, 1 = impact-based
+General model (CES):  U_i = [(1-B_i) X_i^rho + B_i Y_i^rho]^{1/rho} ,  sigma = 1/(1-rho),  B_i = prosocial weight
+Reference spec (CD):  U_i = X_i^{1-B_i} Y_i^{B_i}   (sigma = 1)
 Best response: c_i = min{ e, (pi_i/theta_i) W_i }
-               pi_i = B_i (CD);  pi_i = 1/(1 + ((1-B_i)/B_i)^sigma p_i^(sigma-1)), p_i = theta_i/Lambda_i (CES)
+               pi_i = 1/(1 + ((1-B_i)/B_i)^sigma p_i^(sigma-1)),  p_i = theta_i/Lambda~_i ;  pi_i = B_i at sigma = 1
+Altruism:      a_i = A_i (X_i/Y_i)^(1/sigma),  A_i = lambda_i B_i/(1-B_i)   (willingness to pay for others' benefit)
 SE = sum_i X_i = n e + sum_i (s_i - 1) c_i ,  s_i = sum_{k in N[i]} beta/d_k
 ```
 
@@ -45,6 +49,7 @@ SE = sum_i X_i = n e + sum_i (s_i - 1) c_i ,  s_i = sum_{k in N[i]} beta/d_k
 | `s07_ces_heterogeneous.py` | CES, heterogeneous B_i: K_n, any network (`dc_i/dB_j` with sigma factor), S_n (+ threshold), C_n; utility-maximisation check | 10 |
 | `s08_small_n.py` | Appendix A: explicit K_2, K_3, K_4, C_4, S_3, S_4 (CD and CES, common and heterogeneous); S_2 = K_2, C_3 = K_3; three-route cross-validation | 21 |
 | `s09_warmglow.py` | additive-baseline warm-glow benchmark (common and heterogeneous weights) | 10 |
+| `s10_impact_altruism.py` | general model with impact weight: moral component as agency-restricted AGH (1998) utility (lambda = alpha/g); general best response; lambda-invariance iff sigma = 1; dc/dlambda on networks; price elasticity of giving; altruism (CFS 2008 WTP, MAT ordering, OVX-type decomposition); identification of (sigma, lambda) from the n = 3 design and the Star rotation; exact leaf-centre condition and its thresholds | 59 |
 | `common.py`, `netlib.py` | symbolic helpers; numerical solvers (closed form on the active set, BR iteration, formula-free utility maximisation) | |
 
 ## Results that are new relative to the 5th-report version
@@ -65,6 +70,16 @@ CES
 * Closed-form ceilings on K_n/C_n: `odds = theta Lambda^((1-sigma)/sigma) beta^(-1/sigma)` (impact), `theta beta^(-1/sigma)` (act).
 * Any network: `dc_i*/dB_j = M~_ij c_j* sigma(1-pi_j)/(B_j(1-B_j)) > 0` — H1 robust at every sigma.
 * Ordering: at n = 3 leaf > centre at every sigma (both specs); impact-based reversal possible only for n >= 4, low beta, sigma >= 2. Centre > regular fails under impact-based complements at small B (limit `(Lambda_K/Lambda_C)^(1-sigma)`).
+
+## General model with an impact weight (25 Oct 2026)
+
+* CES is the general model, Cobb-Douglas (sigma = 1) the reference specification: the unique member of the CES family whose predictions do not depend on lambda.
+* `Y_i = c_i + lambda_i (Lambda_i - 1) c_i` is the part of the Anderson-Goeree-Holt (1998) moral terms that agent i controls; lambda = alpha/g.
+* Price elasticity of giving: `eps = -[1 + (sigma-1)(1-pi)]` (CD: -1; Bakija-Heim -0.7 => sigma ~ 0.7).
+* Altruism: `a = A (X/Y)^(1/sigma)`, `A = lambda B/(1-B)`; a = 0 iff lambda = 0; at the optimum a* = lambda p; MAT iff A' >= A and odds(B')/odds(B) (l'/l)^(1-1/sigma) >= 1.
+* Exact leaf-centre condition on S_n: `c_L > c_C  iff  odds(pi_L)/odds(pi_C) > theta_L/theta_C`; with common B, reversal iff lambda > lbar_n(beta) = 2n/[(n^2+n)(2-beta) - 2 beta] and sigma > sigma* = 1 + log(theta_C/theta_L)/log(p_L/p_C). lbar_3(1.5) = 2.
+* Identification: with K_3, centre and leaf observed, (D1, D2) = (sigma-1)(g1(lambda), g2(lambda)) identifies (sigma, lambda) iff sigma != 1.
+* Correction: the 5th-report claim "n = 3 leaf > centre at every sigma for every beta in [6/5, 2) (impact-based)" holds only for beta >= 9/7; at beta = 1.2 it reverses for sigma > 9.72 (the earlier grid stopped at sigma = 8).
 
 ## Corrections to the 5th-report Chapter 2 (applied in the thesis text)
 

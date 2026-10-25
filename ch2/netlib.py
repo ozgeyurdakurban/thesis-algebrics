@@ -6,7 +6,9 @@ full income an agent devotes to giving,
 
     Cobb-Douglas : pi_i = B_i                                 (A_i + B_i = 1)
     CES          : pi_i = 1 / (1 + ((1-B_i)/B_i)^sigma * p_i^(sigma-1)),
-                   p_i = theta_i / Lambda_i  (impact-based)  or  theta_i (act-based),
+                   p_i = theta_i / kappa_i,  kappa_i = 1 + lambda_i (Lambda_i - 1),
+                   lambda_i >= 0 the impact weight (lambda = 1: impact-based,
+                   lambda = 0: act-based; `impact=True/False` is kept as a shortcut),
 
 and the best response c_i = min{e, (pi_i/theta_i) (e + (beta/d_i) S_i)}.
 
@@ -54,24 +56,37 @@ def primitives(G, beta):
 # ---------------------------------------------------------------------------
 # Shares
 # ---------------------------------------------------------------------------
-def shares(G, B, beta, sigma=1.0, impact=True):
+def impact_weight(n, impact=True, lam=None):
+    """Vector of impact weights lambda_i (scalar broadcast); default from `impact`."""
+    if lam is None:
+        lam = 1.0 if impact else 0.0
+    return np.broadcast_to(np.asarray(lam, float), (n,)).copy()
+
+
+def conversion(G, beta, impact=True, lam=None):
+    """kappa_i = 1 + lambda_i (Lambda_i - 1): units of moral good per unit given."""
+    _, _, Lam, _ = primitives(G, beta)
+    return 1.0 + impact_weight(G.shape[0], impact, lam) * (Lam - 1.0)
+
+
+def shares(G, B, beta, sigma=1.0, impact=True, lam=None):
     B = np.asarray(B, float)
     d, theta, Lam, _ = primitives(G, beta)
     if abs(sigma - 1.0) < 1e-12:
         return B.copy()
-    p = theta / Lam if impact else theta
+    p = theta / conversion(G, beta, impact, lam)
     return 1.0 / (1.0 + ((1 - B) / B) ** sigma * p ** (sigma - 1))
 
 
 # ---------------------------------------------------------------------------
 # Solver 1: closed form on the active set
 # ---------------------------------------------------------------------------
-def closed_on_set(G, B, beta, e, K, sigma=1.0, impact=True):
+def closed_on_set(G, B, beta, e, K, sigma=1.0, impact=True, lam=None):
     """Closed form given the set K of agents at the upper corner:
     c_K = e,  c_I = (I - Gamma_I G_II)^{-1} (alpha_I + Gamma_I G_IK e 1)."""
     n = G.shape[0]
     d, theta, _, _ = primitives(G, beta)
-    pi = shares(G, B, beta, sigma, impact)
+    pi = shares(G, B, beta, sigma, impact, lam)
     alpha, gamma = pi * e / theta, pi * beta / (d - beta)
     K = np.asarray(K, bool)
     I = ~K
@@ -87,32 +102,32 @@ def closed_on_set(G, B, beta, e, K, sigma=1.0, impact=True):
     return c
 
 
-def nash_closed(G, B, beta, e, sigma=1.0, impact=True, max_rounds=60):
+def nash_closed(G, B, beta, e, sigma=1.0, impact=True, max_rounds=60, lam=None):
     """Equilibrium by active-set iteration on the closed form; if the active set
     cycles (possible only outside the contraction region), the corner set is taken
     from monotone best-response iteration and the closed form is applied on it."""
     n = G.shape[0]
     d, theta, _, _ = primitives(G, beta)
-    pi = shares(G, B, beta, sigma, impact)
+    pi = shares(G, B, beta, sigma, impact, lam)
     alpha, gamma = pi * e / theta, pi * beta / (d - beta)
     K = np.zeros(n, bool)
     for _ in range(max_rounds):
-        c = closed_on_set(G, B, beta, e, K, sigma, impact)
+        c = closed_on_set(G, B, beta, e, K, sigma, impact, lam)
         if not np.all(np.isfinite(c)):
             break
         newK = (alpha + gamma * (G @ np.minimum(c, e))) >= e - 1e-12
         if np.array_equal(newK, K) and np.all(c <= e + 1e-9) and np.all(c >= 0):
             return np.minimum(c, e)
         K = newK
-    it_sol = nash_iterate(G, B, beta, e, sigma, impact)
+    it_sol = nash_iterate(G, B, beta, e, sigma, impact, lam=lam)
     K = it_sol >= e - 1e-9
-    c = closed_on_set(G, B, beta, e, K, sigma, impact)
+    c = closed_on_set(G, B, beta, e, K, sigma, impact, lam)
     return np.minimum(c, e) if np.all(np.isfinite(c)) else it_sol
 
 
-def nash_iterate(G, B, beta, e, sigma=1.0, impact=True, start=0.0, tol=1e-13, it=200000):
+def nash_iterate(G, B, beta, e, sigma=1.0, impact=True, start=0.0, tol=1e-13, it=200000, lam=None):
     d, theta, _, _ = primitives(G, beta)
-    pi = shares(G, B, beta, sigma, impact)
+    pi = shares(G, B, beta, sigma, impact, lam)
     alpha, gamma = pi * e / theta, pi * beta / (d - beta)
     c = np.full(G.shape[0], float(start))
     for _ in range(it):
@@ -126,9 +141,9 @@ def nash_iterate(G, B, beta, e, sigma=1.0, impact=True, start=0.0, tol=1e-13, it
 # ---------------------------------------------------------------------------
 # Solver 2: formula-free (maximise the actual utility)
 # ---------------------------------------------------------------------------
-def _make_utility(i, G, B, beta, e, sigma, impact, prim):
+def _make_utility(i, G, B, beta, e, sigma, impact, prim, kap):
     d, theta, Lam, _ = prim
-    lam = Lam[i] if impact else 1.0
+    lam = kap[i]
     Bi = B[i]
     r = 1 - 1 / sigma if abs(sigma - 1.0) > 1e-12 else 0.0
 
@@ -161,13 +176,14 @@ def _argmax(f, lo, hi, tol=1e-12):
     return hi if f(hi) >= f(x) else x
 
 
-def nash_utility(G, B, beta, e, sigma=1.0, impact=True, tol=1e-10, it=5000):
+def nash_utility(G, B, beta, e, sigma=1.0, impact=True, tol=1e-10, it=5000, lam=None):
     """Formula-free Nash equilibrium: Gauss-Seidel best responses, each obtained by
     maximising the agent's actual utility on [0, e] (golden-section search)."""
     B = np.asarray(B, float)
     n = G.shape[0]
     prim = primitives(G, beta)
-    fs = [_make_utility(i, G, B, beta, e, sigma, impact, prim) for i in range(n)]
+    kap = conversion(G, beta, impact, lam)
+    fs = [_make_utility(i, G, B, beta, e, sigma, impact, prim, kap) for i in range(n)]
     c = np.zeros(n)
     for _ in range(it):
         old = c.copy()
