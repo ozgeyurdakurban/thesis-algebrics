@@ -1,0 +1,72 @@
+
+==============================================================================
+1. Share and log-odds in an environment (theta, nu)
+==============================================================================
+  odds(pi) = B**sigma*theta**(1 - sigma)*(lambda*nu + 1)**(sigma - 1)/(1 - B)**sigma
+  [PASS] odds(pi) = (B/(1-B))^sigma p^(1-sigma)
+  [PASS] l = sigma b + (1-sigma) log theta - (1-sigma) log(1 + lam nu)  (b = logit B)
+
+==============================================================================
+2. Rebate: price variation at fixed impact identifies sigma
+==============================================================================
+  l_P - l_0 = log((theta_0/theta_P)**(sigma - 1))
+  [PASS] l_P - l_0 = (1-sigma) log(theta_P/theta_0)
+  [PASS] ... and does not depend on B or lambda
+  [PASS] sigma = 1 - (l_P - l_0)/log(theta_P/theta_0)  (inversion)
+  [PASS] sigma = 1  =>  l_P = l_0 (equal shares), whatever lambda and B
+
+==============================================================================
+3. Match: impact variation at fixed price identifies lambda given sigma
+==============================================================================
+  [PASS] l_I - l_0 = (sigma-1) log[(1+lam nu_I)/(1+lam nu_0)]
+  f'(lambda) = (-nu_0 + nu_I)/(lambda**2*nu_0**2 + 2*lambda*nu_0 + 1)
+  [PASS] f'(lambda) = (nu_I - nu_0)/(1 + lam nu_0)^2
+  [PASS] f(0) = 1
+  [PASS] f(lambda) -> nu_I/nu_0 as lambda -> infinity
+  lambda(R) = (1 - R)/(R*nu_0 - nu_I)
+  [PASS] lambda = (R-1)/(nu_I - R nu_0)
+  [PASS] f(lambda(R)) = R  (the inversion is exact)
+  [PASS] R in [1, nu_I/nu_0): lambda >= 0 iff R >= 1 and denominator > 0 iff R < nu_I/nu_0
+  [PASS] sigma = 1  =>  l_I = l_0 for every lambda (lambda unidentified)
+  [PASS] 200 random (B, sigma, lambda, cells): (sigma, lambda) recovered from (l_0, l_P, l_I) to 1e-7
+
+==============================================================================
+4. The prosocial weight from the level
+==============================================================================
+  [PASS] sigma b = l_0 - (1-sigma) log p_0
+
+==============================================================================
+5. Equal-price rebate and match (Corollary equal_price)
+==============================================================================
+  p_I/p_P = k*(lambda*nu_0 + 1)/(k*lambda*nu_0 + 1)
+  [PASS] p_I/p_P = k (1 + lam nu_0)/(1 + k lam nu_0)
+  [PASS] p_I/p_P - 1 = (k-1)/(1 + k lam nu_0) > 0 for k > 1
+  [PASS] p_I/p_P -> 1 as lambda -> infinity
+  [PASS] p_I/p_P < k for every finite lambda >= 0:  k - p_I/p_P = k(k-1) lam nu_0/(1 + k lam nu_0) >= 0
+  [PASS] net transfers: E_I/E_P = pi_I/pi_P (equal-price pair)
+  [PASS] pi_I/pi_P = rho (1+o_P)/(1 + rho o_P) with rho = odds ratio
+  [PASS] rho > 1  =>  pi_I/pi_P < rho  (since (1+o)/(1+rho o) < 1)
+  [PASS] grid: 1 <= pi_I/pi_P < k for sigma in [0,1), lambda >= 0
+  [PASS] grid: pi_I/pi_P < 1 for sigma > 1 and lambda > 0
+  [PASS] own gift under a match: l_I - l_0 = (sigma-1) log f(lambda) has the sign of (sigma-1) for lambda > 0, nu_I > nu_0
+
+==============================================================================
+6. Constant-gross-contribution rule through the CES fit
+==============================================================================
+  d logit(pi)/d log theta for pi = c theta = -1/(c*t - 1)
+  [PASS] slope = 1/(1 - c theta) > 1 (for 0 < c theta < 1)
+  [PASS] CES log-odds slope in log theta at fixed lambda = 0 is (1 - sigma); slope > 1  <=>  sigma < 0
+    c = 0.5, theta = 0.5: local slope 1.333  => sigma_hat = -0.333
+    c = 0.5, theta = 0.75: local slope 1.600  => sigma_hat = -0.600
+    c = 0.5, theta = 1.0: local slope 2.000  => sigma_hat = -1.000
+  => a donor who gives a constant gross fraction in every cell is fitted by sigma_hat < 0, outside the model.
+
+==============================================================================
+7. Profile estimator
+==============================================================================
+  [PASS] for fixed lambda, l_k = a + (1-sigma) log p_k with a = sigma b : linear in (a, 1 - sigma)
+  Estimation: grid over lambda >= 0, OLS of l_obs on log p_k(lambda); see simulations/sim09_rebate_match_power.py
+
+==============================================================================
+SUMMARY s12_rebate_match: 29 PASS, 0 FAIL
+==============================================================================
