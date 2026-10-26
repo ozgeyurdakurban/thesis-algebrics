@@ -1,0 +1,62 @@
+
+==============================================================================
+1. First-order condition and the CES demand for giving
+==============================================================================
+  dZ/dc / rho = (B*(Lambda*c)**(1 - 1/sigma)*(1 - 1/sigma)/c - X**(1 - 1/sigma)*theta*(1 - B)*(1 - 1/sigma)/X)/(1 - 1/sigma)
+  FOC divided by X^(rho-1), with c = r X = B*Lambda**(1 - 1/sigma)/r**(1/sigma) + B*theta - theta
+  [PASS] the FOC depends on (c, X) only through the ratio r = c/X
+  [PASS] FOC holds at c/X = kappa~ = (B/((1-B) theta))^sigma Lambda^(sigma-1)
+  [PASS] FOC(r) is strictly decreasing in r  => unique ratio (40 random points)
+  [PASS] BR = kappa~ W/(1 + kappa~ theta) = (pi/theta) W,  pi = 1/(1 + ((1-B)/B)^sigma p^(sigma-1)), p = theta/Lambda
+  [PASS] X at the optimum = (1 - pi) W  (expenditure share of private consumption)
+  => alpha_i = pi_i e/theta_i, gamma_i = pi_i beta/(d_i - beta): the CD apparatus applies with B_i -> pi_i
+
+==============================================================================
+2. Limits
+==============================================================================
+  [PASS] sigma -> 1: pi -> B  (Cobb-Douglas)
+  [PASS] sigma -> 0 (Leontief): pi -> p/(1+p), independent of B
+  [PASS] sigma -> oo (perfect substitutes): pi -> 1 if B/(1-B) > p, -> 0 if B/(1-B) < p
+  [PASS] kappa~ -> B/((1-B) theta) = kappa as sigma -> 1
+
+==============================================================================
+3. Concavity and the lower corner
+==============================================================================
+  [PASS] d^2 U/dc^2 < 0 on the budget line (150 random points, sigma in (0.1, 6))
+  [PASS] no lower corner: dU/dc -> +oo at c=0 if sigma > 1; U(0) = 0 < U(c>0) if sigma < 1
+
+==============================================================================
+4. Comparative statics of the share
+==============================================================================
+  [PASS] pi/(1-pi) = (B/(1-B))^sigma p^(1-sigma)
+  [PASS] d pi/dB = sigma pi (1-pi)/(B(1-B)) > 0
+  d log odds / d log Lambda = sigma - 1
+  [PASS] moral channel: d log odds/d log Lambda = sigma - 1  (>0 substitutes, <0 complements, 0 at CD)
+  d log odds / d sigma = log(B*Lambda/theta) - log(1 - B)
+  [PASS] sigma channel: d log odds/d sigma = log(B Lambda/((1-B) theta))
+  threshold: share rises with sigma iff B > = theta/(Lambda + theta)
+  [PASS] threshold B^sigma = theta/(theta + Lambda) (impact); theta/(theta + 1) (act-based)
+  note: p_i = theta_i/Lambda_i falls with beta at every position (theta_i falls, Lambda_i rises)
+
+==============================================================================
+5. Act-based (Y = c) versus impact-based (Y = Lambda c)
+==============================================================================
+  odds(impact)/odds(act) = Lambda**(sigma - 1)
+  [PASS] odds(impact)/odds(act) = Lambda^(sigma-1): identical shares (and contributions) iff sigma = 1 (Lambda > 1)
+
+==============================================================================
+6. Hicks-Slutsky decomposition of the moral channel
+==============================================================================
+  [PASS] Y = B^s p^-s W/((1-B)^s + B^s p^(1-s)) satisfies the tangency (1-B) X^(rho-1) p = B Y^(rho-1) on X + pY = W
+  [PASS] expenditure share pY/W of this Marshallian demand equals pi (s05 section 1)
+  [PASS] uncompensated own-price elasticity eps = -[sigma (1 - pi) + pi]
+  [PASS] income elasticity of Y = 1 (homothetic)
+  [PASS] Slutsky: compensated elasticity eps^h = eps + pi = -sigma (1 - pi)
+  [PASS] d log c/d log Lambda = sigma(1-pi) [substitution] + pi [income] - 1 [conversion] = (sigma-1)(1-pi)
+  [PASS] d log c/d log theta (holding W) = eps = -[sigma(1-pi) + pi]: own-price elasticity of giving
+  => Cobb-Douglas (sigma = 1): substitution (1-pi) and income (pi) effects sum to 1 and exactly offset the
+     conversion effect: unit price elasticity of the moral good keeps the expenditure share, hence c, constant.
+
+==============================================================================
+SUMMARY s05_ces_best_response: 24 PASS, 0 FAIL
+==============================================================================

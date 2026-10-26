@@ -1,0 +1,82 @@
+
+==============================================================================
+1. Complete network K_n, heterogeneous B_i, general n
+==============================================================================
+  c_i as a function of the aggregate C = B_i*(C*beta + e*n)/(B_i*beta - beta + n)
+  [PASS] c_i = phi_i (e + (beta/n) C),  phi_i = n B_i/(n - (1-B_i) beta)
+  [PASS] phi_i = B_i/(A_i theta + B_i) (thesis notation)
+  C* (aggregate) = Phi*e*n/(-Phi*beta + n)
+  [PASS] C* = e Phi / mu,  mu = 1 - (beta/n) Phi
+  [PASS] c_i* = e phi_i / mu
+  [PASS] general-n formula = direct solution of the n equations, n = 2..6
+  [PASS] on K_n: rho(Gamma G) < 1  <=>  mu > 0  (400 random draws)
+  [PASS] interiority c_i* < e  <=>  phi_i < mu
+  d phi_i / d B_i = n*(-beta + n)/(B_i*beta - beta + n)**2
+  [PASS] d phi_i/d B_i = n(n - beta)/(n - (1-B_i) beta)^2 > 0
+  => c_i* - c_j* = (e/mu)(phi_i - phi_j), so sign(c_i* - c_j*) = sign(B_i - B_j) since phi is increasing
+  [PASS] cross effect: c_i* rises with every B_j (through mu)
+  [PASS] homogeneous limit: B_i = B gives c*_K of s03
+
+==============================================================================
+2. Any network: matrix solution and comparative statics
+==============================================================================
+  [PASS] S_4: (I - Gamma G)^-1 alpha = direct solution
+  [PASS] S_4: d c_i*/d B_j = M_ij c_j*/B_j > 0 for all i, j
+  [PASS] C_4: (I - Gamma G)^-1 alpha = direct solution
+  [PASS] C_4: d c_i*/d B_j = M_ij c_j*/B_j > 0 for all i, j
+  [PASS] C_5: (I - Gamma G)^-1 alpha = direct solution
+  [PASS] C_5: d c_i*/d B_j = M_ij c_j*/B_j > 0 for all i, j
+  [PASS] path P_4 (irregular, non-star): (I - Gamma G)^-1 alpha = direct solution
+  [PASS] path P_4 (irregular, non-star): d c_i*/d B_j = M_ij c_j*/B_j > 0 for all i, j
+  [PASS] c* = sum_k (Gamma G)^k alpha (walk-weighted Bonacich form) when rho < 1
+
+==============================================================================
+3. Star S_n, heterogeneous weights, general n
+==============================================================================
+  c_C* = B_C*e*(-2*Sigma_L*beta + beta*n - 2*n)/(B_C*Sigma_L*beta**2 - beta**2 + beta*n + 2*beta - 2*n)
+  [PASS] c_C* = B_C e [n(2-beta) + 2 beta Sigma_L] / [(n-beta)(2-beta) - B_C beta^2 Sigma_L]
+  c_j* (leaf j) = -B_j*e*(B_C*beta*n - 2*beta + 2*n)/(B_C*Sigma_L*beta**2 - beta**2 + beta*n + 2*beta - 2*n)
+  [PASS] c_j* = B_j (2e + beta c_C*)/(2 - beta)
+  [PASS] equivalently c_j* = B_j e [2(n-beta) + n B_C beta] / [(n-beta)(2-beta) - B_C beta^2 Sigma_L]
+  => the centre depends on the leaves only through Sigma_L = sum of leaf weights
+  [PASS] rho(Gamma G)^2 = gamma_C sum gamma_j < 1  <=>  D_S(B) > 0
+  [PASS] general-n star formula = direct solution, n = 3..6
+  [PASS] homogeneous limit (B_C = B, Sigma_L = (n-1)B) gives s03 centre formula
+  => leaf j out-contributes the centre  <=>  B_j (2e + beta c_C*) > (2 - beta) c_C*
+  roots in B_C of leaf = centre (common leaf weight): ['2*B_P*(-beta + n)/(B_P*beta*n - 2*B_P*beta - beta*n + 2*n)']
+  threshold B_C*(B_P, n) = 2*B_P*(-beta + n)/(B_P*beta*n - 2*B_P*beta - beta*n + 2*n)
+  [PASS] threshold B_C* = 2 B_P (n - beta)/[n(2 - beta) + (n-2) B_P beta]
+  [PASS] n = 3: B_C* = 2 B_P (3-beta)/(6 - 3 beta + B_P beta)  [thesis Prop. star_threshold]
+  [PASS] B_C* > B_P: the centre needs a strictly higher weight to match a leaf
+  [PASS] d B_C*/d n > 0: the hub's handicap grows with the number of leaves
+  [PASS] two leaves j,k: c_j* - c_k* = (B_j - B_k)(2e + beta c_C*)/(2-beta)  => ordered by B
+
+==============================================================================
+4. Cycle C_n, heterogeneous weights, general n
+==============================================================================
+  General n: c* = (I - Gamma A_cyc)^{-1} alpha with alpha_i = 3 B_i e/(3-beta), gamma_i = B_i beta/(3-beta).
+  Sufficient for rho < 1: 2 max_i gamma_i < 1  <=>  max_i B_i < (3-beta)/(2 beta).
+  C_4 example B = [0.06, 0.05, 0.14, 0.05]: c* = [2.0204, 1.8367, 4.7143, 1.8367]
+  counterexample on C_4: B = [0.1296, 0.0485, 0.0749, 0.0723], c* = [4.469, 1.7984, 2.5811, 2.6778] (agent 2 has higher B but lower c than agent 3)
+  [PASS] on C_n (n >= 4) contributions are NOT ordered by B_i alone (neighbours' weights matter)
+  [PASS] on C_3 = K_3 contributions ARE ordered by B_i (3000 draws)
+
+==============================================================================
+5. Mixed regimes: active-set characterisation and uniqueness
+==============================================================================
+  max deviation (active set vs least vs greatest equilibrium) = 1.24e-13
+  [PASS] active-set closed form reproduces the equilibrium incl. corners; least = greatest (1500 draws)
+
+==============================================================================
+6. Experimental illustration (e = 15, n = 3, beta = 3/2)
+==============================================================================
+  B = [0.1, 0.1, 0.1]: regular [3.75, 3.75, 3.75] | star (centre first) [4.468, 7.34, 7.34]
+  B = [0.05, 0.1, 0.15]: regular [1.954, 3.731, 5.353] | star (centre first) [2.338, 6.701, 10.052]
+  B = [0.15, 0.05, 0.1]: regular [5.353, 1.954, 3.731] | star (centre first) [6.273, 3.941, 7.882]
+  B = [0.2, 0.05, 0.05]: regular [6.774, 1.935, 1.935] | star (centre first) [7.66, 4.149, 4.149]
+  threshold at B_P = 0.05: B_C* = 0.0952381
+  [PASS] experiment, B_P = 0.05: centre overtakes leaves only above B_C* = 2/21 = 0.0952
+
+==============================================================================
+SUMMARY s04_cd_heterogeneous: 34 PASS, 0 FAIL
+==============================================================================

@@ -6,15 +6,28 @@ reported in the **Model** and **Equilibrium Analysis** chapters is re-derived an
 checked symbolically with [SymPy](https://www.sympy.org); each script prints
 `PASS`/`FAIL` per claim and asserts at the end.
 
-## Model
+## Chapter 2 re-derivation (`ch2/`)
 
-Material payoff and (impact-written) moral component
+The folder [`ch2/`](ch2/) contains the step-by-step **re-derivation** of Chapter 2:
+each closed form is derived with SymPy (not typed in and checked), compared with the
+thesis text, and exported as LaTeX. See [`ch2/README.md`](ch2/README.md) for the
+roadmap, the new results and the audit notes. Run `python ch2/run_all.py`.
+
+## Model (thesis version of 25 October 2026)
+
+The general model is CES; Cobb-Douglas is its sigma = 1 reference specification.
 ```
-X_i = e - theta_i c_i + (beta/d_i) * sum_{j in G_i} c_j ,   theta_i = 1 - beta/d_i
-Y_i = ( 1 + sum_{j in G_i} beta/d_j ) c_i        # impact multiplier, inert under CD
-U_i = X_i^{A_i} Y_i^{B_i} ,   A_i = 1 - B_i      # B_i = prosocial weight
+X_i = W_i - theta_i c_i ,  W_i = e + (beta/d_i) sum_{j in G_i} c_j ,  theta_i = 1 - beta/d_i   # price of giving
+Y_i = c_i + lambda_i sum_{j in G_i} (beta/d_j) c_i = Lambda~_i c_i                            # moral component
+Lambda~_i = 1 + lambda_i (Lambda_i - 1),  Lambda_i = 1 + sum_{j in G_i} beta/d_j               # (effective) impact multiplier
+U_i = [(1-B_i) X_i^rho + B_i Y_i^rho]^(1/rho),  sigma = 1/(1-rho)                              # B_i = prosocial weight
+c_i = min{e, (pi_i/theta_i) W_i},  pi_i = 1/(1 + ((1-B_i)/B_i)^sigma p_i^(sigma-1)),  p_i = theta_i/Lambda~_i
+a_i = A_i (X_i/Y_i)^(1/sigma),  A_i = lambda_i B_i/(1-B_i)                                     # altruism (willingness to pay)
 ```
-Interior first-order condition: `c_i = kappa_i X_i`, with `kappa_i = B_i/(A_i theta_i)`.
+`lambda_i = 0` is the act-based and `lambda_i = 1` the impact-based specification. At `sigma = 1`,
+`pi_i = B_i` and the impact weight drops out. The current derivations are in [`ch2/`](ch2/)
+(`s01`-`s10`, 262 checks); the scripts listed below are the earlier verification of the
+5th-monitoring-report formulas and are kept for reference.
 
 ## Files
 

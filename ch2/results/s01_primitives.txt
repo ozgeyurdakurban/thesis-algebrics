@@ -1,0 +1,44 @@
+
+==============================================================================
+1. Identities that hold on EVERY network (checked on K_n, C_n, S_n, n=3..8)
+==============================================================================
+  [PASS] X_i = e - theta_i c_i + (beta/d_i) sum_{j in G_i} c_j
+  [PASS] Y_i = Lambda_i c_i with Lambda_i = 1 + sum_{j in G_i} beta/d_j
+  [PASS] SE = sum_i X_i = n e + sum_i (s_i - 1) c_i  (coefficients derived)
+  [PASS] Lambda_i = 1 + s_i - beta/d_i  (impact multiplier = 1 + external social return)
+
+==============================================================================
+2. Closed forms by topology for general n (derived from the structure)
+==============================================================================
+  [PASS] general-n closed forms reproduce the explicit graphs for n = 3..8
+  K_n        : d=n, theta=(-beta + n)/n, Lambda=(beta*n - beta + n)/n, s=beta
+  C_n        : d=3, theta=-(beta - 3)/3, Lambda=(2*beta + 3)/3, s=beta
+  S_n center : d=n, theta=(-beta + n)/n, Lambda=(beta*n - beta + 2)/2, s=beta*(n**2 - n + 2)/(2*n)
+  S_n leaf   : d=2, theta=-(beta - 2)/2, Lambda=(beta + n)/n, s=beta*(n + 2)/(2*n)
+  [PASS] s_i = beta on regular graphs (K_n, C_n)
+  Lambda_C - Lambda_L = beta*(n - 2)*(n + 1)/(2*n)
+  [PASS] Lambda_C > Lambda_L on S_n for n >= 3 (since (n-1)/2 - 1/n > 0)
+
+==============================================================================
+3. Admissible beta: dilemma (1<beta<d_i) and social productivity (s_i>1)
+==============================================================================
+  leaf social-productivity floor  beta_L = 2*n/(n + 2)
+  center social-productivity floor beta_C = 2*n/(n**2 - n + 2)
+  [PASS] leaf floor = 2n/(n+2)
+  [PASS] center floor = 2n/(n^2-n+2)
+  [PASS] n=3: leaf floor 6/5, center floor 3/4
+  [PASS] leaf floor is the binding one for n>=3 (beta_L >= 1 >= beta_C)
+  [PASS] star beta-band (2n/(n+2), 2) is non-empty for all n but shrinks to 0 as n->oo
+
+==============================================================================
+4. Experimental values (e=15, n=3, beta=3/2)
+==============================================================================
+  K_3=C_3    : d=3, theta=1/2, MPCR=1/2, Lambda=2, s=3/2
+  S_3 center : d=3, theta=1/2, MPCR=1/2, Lambda=5/2, s=2
+  S_3 leaf   : d=2, theta=1/4, MPCR=3/4, Lambda=3/2, s=5/4
+  [PASS] experiment: theta=1/2 at d=3, theta=1/4 at d=2
+  [PASS] experiment: s_C = 2, s_L = 5/4 (>1), s_reg = 3/2
+
+==============================================================================
+SUMMARY s01_primitives: 14 PASS, 0 FAIL
+==============================================================================

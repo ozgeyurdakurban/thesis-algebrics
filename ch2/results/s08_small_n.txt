@@ -1,0 +1,68 @@
+
+==============================================================================
+1. Cobb-Douglas: direct utility FOCs vs general-N closed forms
+==============================================================================
+  [PASS] CD heterogeneous K_2: direct FOC solution = general-N formula
+   K_2, common B: -2*B*e/(B*beta + beta - 2)
+  [PASS] CD heterogeneous K_3: direct FOC solution = general-N formula
+   K_3, common B: -3*B*e/(2*B*beta + beta - 3)
+  [PASS] CD heterogeneous K_4: direct FOC solution = general-N formula
+   K_4, common B: -4*B*e/(3*B*beta + beta - 4)
+  [PASS] CD heterogeneous C_4: direct FOC solution = general-N formula
+   C_4, common B: -3*B*e/(2*B*beta + beta - 3)
+  [PASS] CD heterogeneous S_3: direct FOC solution = general-N formula
+   S_3, common B: -B*e*(3*B*beta - 2*beta + 6)/(2*B**2*beta**2 - beta**2 + 5*beta - 6); -B*e*(4*B*beta - 3*beta + 6)/(2*B**2*beta**2 - beta**2 + 5*beta - 6)
+  [PASS] CD heterogeneous S_4: direct FOC solution = general-N formula
+   S_4, common B: -2*B*e*(2*B*beta - beta + 4)/(3*B**2*beta**2 - beta**2 + 6*beta - 8); -2*B*e*(3*B*beta - 2*beta + 4)/(3*B**2*beta**2 - beta**2 + 6*beta - 8)
+  [PASS] K_2: c_i* = m e B_i prod_(k!=i) q_k / [prod_k q_k - beta sum_j B_j prod_(k!=j) q_k],  q_k = m - (1-B_k) beta
+  [PASS] K_3: c_i* = m e B_i prod_(k!=i) q_k / [prod_k q_k - beta sum_j B_j prod_(k!=j) q_k],  q_k = m - (1-B_k) beta
+  [PASS] K_4: c_i* = m e B_i prod_(k!=i) q_k / [prod_k q_k - beta sum_j B_j prod_(k!=j) q_k],  q_k = m - (1-B_k) beta
+  [PASS] C_4: c_i* = 3 e B_i [3 - beta + beta (sum of i's neighbours' B)] / [(3-beta)^2 - beta^2 (B_1+B_3)(B_2+B_4)]
+  [PASS] S_3: centre B_C e[n(2-beta) + 2 beta Sigma_L]/D, leaf B_j e[2(n-beta) + n B_C beta]/D
+  [PASS] S_4: centre B_C e[n(2-beta) + 2 beta Sigma_L]/D, leaf B_j e[2(n-beta) + n B_C beta]/D
+  [PASS] S_2 = K_2: star formula at n = 2 equals the complete-network formula
+  [PASS] C_3 = K_3: cycle system at n = 3 equals the complete-network formula (heterogeneous)
+
+==============================================================================
+2. CES: share-form system vs general-N closed forms (heterogeneous shares)
+==============================================================================
+  [PASS] CES heterogeneous K_2: share-form system = general-N formula
+  [PASS] CES heterogeneous K_3: share-form system = general-N formula
+  [PASS] CES heterogeneous K_4: share-form system = general-N formula
+  [PASS] CES heterogeneous C_4: share-form system = general-N formula
+  [PASS] CES heterogeneous S_3: share-form system = general-N formula
+  [PASS] CES heterogeneous S_4: share-form system = general-N formula
+
+==============================================================================
+3. Formula-free numerical check (maximise the actual utilities)
+==============================================================================
+   (14 of the draws had agents at the corner; compared through the active-set closed form)
+   K_2 CD          : max |general-N formula - utility maximisation| = 5.7e-07
+   K_2 CES-impact  : max |general-N formula - utility maximisation| = 3.2e-07
+   K_2 CES-act     : max |general-N formula - utility maximisation| = 8.2e-07
+   K_2 CES-lambda_i: max |general-N formula - utility maximisation| = 2.2e-06
+   K_3 CD          : max |general-N formula - utility maximisation| = 9.2e-07
+   K_3 CES-impact  : max |general-N formula - utility maximisation| = 7.5e-07
+   K_3 CES-act     : max |general-N formula - utility maximisation| = 7.6e-07
+   K_3 CES-lambda_i: max |general-N formula - utility maximisation| = 1.4e-06
+   K_4 CD          : max |general-N formula - utility maximisation| = 1.0e-06
+   K_4 CES-impact  : max |general-N formula - utility maximisation| = 7.2e-07
+   K_4 CES-act     : max |general-N formula - utility maximisation| = 3.8e-07
+   K_4 CES-lambda_i: max |general-N formula - utility maximisation| = 6.3e-07
+   C_4 CD          : max |general-N formula - utility maximisation| = 4.4e-07
+   C_4 CES-impact  : max |general-N formula - utility maximisation| = 1.5e-06
+   C_4 CES-act     : max |general-N formula - utility maximisation| = 6.8e-07
+   C_4 CES-lambda_i: max |general-N formula - utility maximisation| = 3.5e-07
+   S_3 CD          : max |general-N formula - utility maximisation| = 1.1e-06
+   S_3 CES-impact  : max |general-N formula - utility maximisation| = 4.2e-07
+   S_3 CES-act     : max |general-N formula - utility maximisation| = 6.4e-07
+   S_3 CES-lambda_i: max |general-N formula - utility maximisation| = 1.7e-06
+   S_4 CD          : max |general-N formula - utility maximisation| = 1.0e-06
+   S_4 CES-impact  : max |general-N formula - utility maximisation| = 5.1e-07
+   S_4 CES-act     : max |general-N formula - utility maximisation| = 4.3e-07
+   S_4 CES-lambda_i: max |general-N formula - utility maximisation| = 1.1e-06
+  [PASS] all small-N cases: general-N formula = formula-free equilibrium (CD; CES with lambda = 1, 0 and heterogeneous lambda_i; common and heterogeneous B)
+
+==============================================================================
+SUMMARY s08_small_n: 21 PASS, 0 FAIL
+==============================================================================

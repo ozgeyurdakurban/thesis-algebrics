@@ -1,0 +1,89 @@
+
+==============================================================================
+1. Complete network K_n (no network)
+==============================================================================
+  c*_K = -B*e*n/(B*beta*n - B*beta + beta - n)
+  [PASS] c*_K = B n e / (n - beta - B beta (n-1))
+  existence bound on B (D_K > 0) = (-beta + n)/(beta*(n - 1))
+  interiority ceiling B^K(beta,n) = (-beta + n)/(beta*n - beta + n)
+  [PASS] B^K = (n - beta)/(n + beta (n-1))
+  [PASS] ceiling < existence bound  (interiority implies D_K > 0)
+  [PASS] interiority implies contraction (n-1) B beta/(n-beta) < 1  => unique equilibrium
+  BR(S=(n-1)e) - e = e*(B*beta*n - B*beta + B*n + beta - n)/(-beta + n)
+  [PASS] BR(S=(n-1)e) >= e  <=>  B >= B^K  (full-corner regime above the ceiling)
+  dc*_K/dB = e*n*(-beta + n)/(B*beta*n - B*beta + beta - n)**2
+  dc*_K/de = -B*n/(B*beta*n - B*beta + beta - n)
+  dc*_K/dbeta = B*e*n*(B*n - B + 1)/(B*beta*n - B*beta + beta - n)**2
+  dc*_K/dn = B*beta*e*(B - 1)/(B*beta*n - B*beta + beta - n)**2
+  [PASS] dc*_K/dB = n e (n-beta)/D^2 > 0
+  [PASS] dc*_K/de = c*/e > 0 (contributions proportional to e)
+  [PASS] dc*_K/dbeta = B n e (1 + B(n-1))/D^2 > 0
+  [PASS] dc*_K/dn = -B (1-B) beta e / D^2 < 0  (group-size effect)
+  [PASS] d ceiling/d beta = -n^2/(n+beta(n-1))^2 < 0
+  [PASS] d ceiling/d n = beta^2/(n+beta(n-1))^2 > 0
+  [PASS] lim_{n->oo} c*_K = B e/(1 - B beta)  (finite large-group limit)
+
+==============================================================================
+2. Cycle C_n (d_i = 3 for every n)
+==============================================================================
+  c*_cyc = -3*B*e/(2*B*beta + beta - 3)
+  [PASS] c*_cyc = 3 B e/(3 - beta - 2 B beta), independent of n
+  [PASS] C_3 = K_3: c*_cyc = c*_K at n = 3
+  ceiling B^cyc = -(beta - 3)/(2*beta + 3)
+  [PASS] B^cyc = (3 - beta)/(3 + 2 beta)
+  [PASS] interiority implies contraction 2 gamma = 2 B beta/(3-beta) < 1
+  [PASS] n > 3: cycle member contributes more than a complete-network member (smaller d)
+
+==============================================================================
+3. Star S_n, common weight B: centre (d=n) and n-1 leaves (d=2)
+==============================================================================
+  c*_centre = -B*e*(2*B*beta*n - 2*B*beta - beta*n + 2*n)/(B**2*beta**2*n - B**2*beta**2 - beta**2 + beta*n + 2*beta - 2*n)
+  c*_leaf = -B*e*(B*beta*n - 2*beta + 2*n)/(B**2*beta**2*n - B**2*beta**2 - beta**2 + beta*n + 2*beta - 2*n)
+  [PASS] common denominator Delta_S = (n-beta)(2-beta) - (n-1) B^2 beta^2
+  [PASS] c*_centre = B e [n(2-beta) + 2(n-1) B beta] / Delta_S
+  [PASS] c*_leaf   = B e [2(n-beta) + n B beta] / Delta_S
+  [PASS] contraction rho(Gamma A)^2 = (n-1) gamma_C gamma_L < 1  <=>  Delta_S > 0
+  c*_leaf - c*_centre = B*beta*e*(B - 1)*(n - 2)/(B**2*beta**2*n - B**2*beta**2 - beta**2 + beta*n + 2*beta - 2*n)
+  [PASS] gap = (n-2) B (1-B) beta e / Delta_S
+  [PASS] n = 3: gap = A B beta e/(beta^2 - 5 beta + 6 - 2 B^2 beta^2)  [thesis Prop. star_order]
+  roots of c*_leaf = e in B: ['-(-beta + n + sqrt(beta**4*n - beta**4 - beta**3*n**2 + 2*beta**3 + beta**2*n**2 - 4*beta**2*n + beta**2 + 2*beta*n**2 - 2*beta*n + n**2))/(beta*(beta*n - beta + n))', '-(-beta + n - sqrt(beta**4*n - beta**4 - beta**3*n**2 + 2*beta**3 + beta**2*n**2 - 4*beta**2*n + beta**2 + 2*beta*n**2 - 2*beta*n + n**2))/(beta*(beta*n - beta + n))']
+  leaf ceiling B^S_L(beta,n) = -(-beta + n - sqrt(beta**4*n - beta**4 - beta**3*n**2 + 2*beta**3 + beta**2*n**2 - 4*beta**2*n + beta**2 + 2*beta*n**2 - 2*beta*n + n**2))/(beta*(beta*n - beta + n))
+  [PASS] n=3, beta=3/2: leaf ceiling = 1/6
+  centre contribution when leaves are at e = B*e*(beta*n - beta + n)/(-beta + n)
+  centre ceiling (mixed regime) = (-beta + n)/(beta*n - beta + n)
+  [PASS] centre ceiling in the mixed regime equals the K_n ceiling (n-beta)/(n+beta(n-1))
+  [PASS] on the fully interior region: Delta_S > 0 (contraction holds)
+  experiment: Delta_S > 0 iff B < = 0.408248
+  [PASS] experiment: contraction (Delta_S > 0) holds for B < 0.408 > 1/4, i.e. across all three regimes up to the full corner
+  [PASS] on the fully interior region: leaf > centre (gap > 0)
+  [PASS] leaf ceiling < centre ceiling (leaves corner first)
+  [PASS] on the fully interior region: centre > complete-network member with the same n
+  [PASS] closed form: c*_centre - c*_K = (n-1)(n-2) B^2 (1-B) beta^2 e / (D_K Delta_S)
+  [PASS] leaf ceiling = [-(n-beta) + sqrt((n-beta)((n-beta) + beta(2-beta)(n+beta(n-1))))] / [beta(n+beta(n-1))]
+  [PASS] leaf ceiling solves beta(n+beta(n-1)) B^2 + 2(n-beta) B - (n-beta)(2-beta) = 0
+  [PASS] dc*_centre/dB > 0 and dc*_leaf/dB > 0 on the interior region
+  [PASS] dc*_centre/dbeta > 0 and dc*_leaf/dbeta > 0 on the interior region
+  [PASS] d gap/dB > 0 on the interior region (gap widens with the prosocial weight)
+  sign(centre(S_n) - member(C_n)) for n >= 4 takes values {False, True}
+  [PASS] for n >= 4 the centre-vs-cycle ranking is parameter dependent (H4 ordering is an n=3 result)
+
+==============================================================================
+4. Experimental values (e = 15, n = 3, beta = 3/2)
+==============================================================================
+  ceilings: B^K = B^cyc = B^S_C = 1/4 ; B^S_L = 1/6
+    B   | regular | star centre | star leaf | leaf - centre
+  0.05  |    1.6667 |    1.8274 |    3.2741 |    1.4467
+  0.10  |    3.7500 |    4.4681 |    7.3404 |    2.8723
+  0.15  |    6.4286 |    8.3237 |   12.7457 |    4.4220
+  [PASS] B=0.10: regular 3.75, centre 4.4681, leaf 7.3404
+  [PASS] H4 ordering at n=3: leaf > centre > regular on the interior region
+
+==============================================================================
+5. Numerical uniqueness: least (from 0) and greatest (from e) equilibria coincide
+==============================================================================
+  max |c_least - c_greatest| over the grid = 4.23e-12
+  [PASS] unique equilibrium (incl. corner and mixed regimes) on the grid
+
+==============================================================================
+SUMMARY s03_cd_symmetric: 40 PASS, 0 FAIL
+==============================================================================
