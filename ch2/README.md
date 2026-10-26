@@ -50,6 +50,7 @@ SE = sum_i X_i = n e + sum_i (s_i - 1) c_i ,  s_i = sum_{k in N[i]} beta/d_k
 | `s08_small_n.py` | Appendix A: explicit K_2, K_3, K_4, C_4, S_3, S_4 (CD and CES, common and heterogeneous); S_2 = K_2, C_3 = K_3; three-route cross-validation (including a heterogeneous impact weight lambda_i) | 21 |
 | `s09_warmglow.py` | additive-baseline warm-glow benchmark (common and heterogeneous weights) | 10 |
 | `s10_impact_altruism.py` | general model with impact weight: moral component as agency-restricted AGH (1998) utility (lambda = alpha/g); general best response; lambda-invariance iff sigma = 1; dc/dlambda on networks; price elasticity of giving; altruism (CFS 2008 WTP, MAT ordering, OVX-type decomposition); identification of (sigma, lambda) from the n = 3 design and the Star rotation; exact leaf-centre condition and its thresholds; equal giving shares across positions iff sigma = 1; dictator share = B at sigma = 1 | 61 |
+| `s11_share_game.py` | generic-share game: contraction and M-matrix condition, `dc_i/dpi_j = M_ij c_j/pi_j`, K_n closed form and ceiling, C_n, S_n (leaf vs centre in odds), CD as the pi = B case | 24 |
 | `common.py`, `netlib.py` | symbolic helpers; numerical solvers (closed form on the active set, BR iteration, formula-free utility maximisation) | |
 
 ## Map to the thesis (version of 25 October 2026)
@@ -77,6 +78,7 @@ reference specification. Numbers refer to `chapters/ch2_theory.tex` as compiled 
 | Props. 2.4.25-2.4.27 | general sigma and lambda, heterogeneous B_i; `dc_i/dlambda_j` | s07; s10 (4) |
 | Prop. 2.4.28 | identification of (sigma, lambda) | s10 (8) |
 | Prop. 2.4.29 | additive-baseline warm-glow comparison | s09 |
+| Section 2.4.2 (share game) | `c = alpha~ + Gamma~ G c`, `partial c_i / partial pi_j`, K_n, C_n, S_n | s11 |
 | Appendix A | explicit small-n solutions, cross-validation | s08 |
 | eq. (2.18), primitives | `SE = n e + sum (s_i - 1) c_i`, `Lambda_i = 1 + s_i - beta/d_i` | s01 |
 
