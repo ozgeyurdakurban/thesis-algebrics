@@ -1,0 +1,44 @@
+
+==============================================================================
+1. Complete network K_n with arbitrary shares
+==============================================================================
+  [PASS] Step 1: c_i = phi_i (e + beta C/n), phi_i = n pi_i/(n-(1-pi_i)beta)
+  [PASS] phi_i < 1 iff pi_i (n - beta) < n - beta  (identically true for pi_i < 1)
+  [PASS] Step 2: C* = e Phi/mu, e + beta C*/n = e/mu
+  [PASS] gamma~/(1+gamma~) = (beta/n) phi_i
+  [PASS] det(I - Gamma~ G) = det(I + Gamma~)(1 - (beta/n) Phi) for n = 3 with three different shares
+  [PASS] Step 5: c_K = pi n e/(n - beta - pi beta (n-1))
+  [PASS] ceiling pi = (n-beta)/(n + beta(n-1)) = theta/Lambda
+  [PASS] Lambda - theta = beta, so pi < theta/Lambda iff odds(pi) < theta/beta
+  [PASS] odds(pi) = theta/beta  <=>  pi = theta/(theta+beta) = theta/Lambda
+  [PASS] d phi/d pi = n (n-beta)/(n - (1-pi) beta)^2 > 0
+
+==============================================================================
+2. Cycle C_n with arbitrary shares
+==============================================================================
+  [PASS] C_n symmetric: c = 3 pi e/(3 - beta - 2 pi beta)
+  [PASS] C_n symmetric equals K_3 formula
+  [PASS] C_n ceiling pi = (3-beta)/(3+2 beta) = theta/Lambda (d=3)
+
+==============================================================================
+3. Star S_n with arbitrary shares
+==============================================================================
+  [PASS] Steps 1-2: c_C = pi_C e [n(2-beta) + 2 beta Sigma]/D~
+  [PASS] Step 2: c_L = pi_L (2e + beta c_C)/(2-beta) = pi_L e [2(n-beta) + n pi_C beta]/D~
+  [PASS] rho(Gamma~ G)^2 = gamma_C (n-1) gamma_L = pi_C beta^2 Sigma/((n-beta)(2-beta)); 1 - rho^2 = D~/((n-beta)(2-beta))
+  [PASS] non-zero eigenvalues of Gamma~ G on S_4: lambda^2 = gamma_C sum_j gamma_j (heterogeneous shares)
+  [PASS] sign(c_L - c_C): numerator = pi_C pi_L [2(n-beta)/odds(pi_C) - n(2-beta)/odds(pi_L)]
+  [PASS] leaf > centre iff odds(pi_L)/odds(pi_C) > n(2-beta)/(2(n-beta)) = theta_L/theta_C
+  [PASS] threshold pi_C* = 2 pi_L (n-beta)/[n(2-beta) + (n-2) pi_L beta]
+  [PASS] theta_L < theta_C for n > 2
+  [PASS] corner: c_C(leaves at e) = pi_C e (n + beta(n-1))/(n-beta); < e iff odds(pi_C) < theta_C/beta
+
+==============================================================================
+4. General network: dc*_i/dpi_j = M_ij c_j*/pi_j (4-node path with generic shares)
+==============================================================================
+  [PASS] dc_i/dpi_j = M_ij c_j/pi_j for all i, j on the path P_4
+  [PASS] bracket e/theta_j + beta S_j/(d_j - beta) = W_j/theta_j = c_j/pi_j (all j)
+
+==============================================================================
+SUMMARY s11_share_game: 24 PASS, 0 FAIL
+==============================================================================
